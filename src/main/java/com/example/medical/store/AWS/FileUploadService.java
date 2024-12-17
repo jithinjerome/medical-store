@@ -1,4 +1,4 @@
-package com.bank.AWS;
+package com.example.medical.store.AWS;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 public class FileUploadService {
 
     @Autowired
-    private com.bank.AWS.S3Config s3Config;
+    private S3Config s3Config;
 
     @Autowired
     private S3Client s3Client;

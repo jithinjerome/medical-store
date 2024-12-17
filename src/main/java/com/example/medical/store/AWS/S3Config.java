@@ -1,4 +1,4 @@
-package com.bank.AWS;
+package com.example.medical.store.AWS;
 
 
 import org.springframework.beans.factory.annotation.Value;
