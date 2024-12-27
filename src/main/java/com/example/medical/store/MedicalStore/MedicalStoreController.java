@@ -1,18 +1,21 @@
 package com.example.medical.store.MedicalStore;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.medical.store.Admin.AdminModel;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping(path = "/api/auth/medicalstore")
 public class MedicalStoreController {
 
-    @GetMapping("/medicines")
-    public String getAllMedicines(){
-        return "All Medicines";
+    @PostMapping("/register")
+    public ResponseEntity<String> medicalStoreRegister(@Valid @RequestBody AdminModel adminModel) {
+        return ResponseEntity.ok("Medical store registered successfully");
     }
-    @GetMapping("/medicine/{id}")
-    public String getMedicineById(@PathVariable int id){
-        return "Medicine id : "+ id;
+
+    @PostMapping("/login")
+    public ResponseEntity<String> medicalStoreLogin(@Valid @RequestParam String email, @RequestParam String password) {
+        return ResponseEntity.ok("Medical store logged in successfully");
     }
 }

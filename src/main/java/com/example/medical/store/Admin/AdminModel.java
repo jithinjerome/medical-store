@@ -1,4 +1,4 @@
-package com.example.medical.store.DeliveryPerson;
+package com.example.medical.store.Admin;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -10,16 +10,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeliveryPersonModel {
+public class AdminModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "delivery_person_id")
-    private int deliveryPersonId;
-
-    @Column(name = "name", nullable = false)
-    @NotBlank(message = "Name is required")
-    private String name;
+    @Column(name = "admin_id")
+    private int adminId;
 
     @Column(name = "email", nullable = false, unique = true)
     @Email(message = "Invalid email address")
@@ -31,13 +27,5 @@ public class DeliveryPersonModel {
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "verification_status", nullable = false)
-    private VerificationStatus verificationStatus;
 
-    // Enum for Verification Status
-    public enum VerificationStatus {
-        VERIFIED,
-        NOT_VERIFIED
-    }
 }
