@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 public class MedicalStoreController {
 
     @PostMapping("/register")
-    public ResponseEntity<String> medicalStoreRegister(@Valid @RequestBody AdminModel adminModel) {
+    public ResponseEntity<String> medicalStoreRegister(@Valid @RequestBody MedicalStoreModel medicalStoreModel) {
         return ResponseEntity.ok("Medical store registered successfully");
     }
 
