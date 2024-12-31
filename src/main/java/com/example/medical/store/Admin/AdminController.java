@@ -1,6 +1,6 @@
 package com.example.medical.store.Admin;
 
-import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,24 +16,23 @@ public class AdminController {
     private AdminService adminService;
 
 
-
     @PostMapping("/register")
-    public ResponseEntity<?> adminRegister(@Valid @RequestBody AdminModel adminModel) throws IOException {
-        AdminModel registeredAdmin = adminService.adminCredentials(adminModel);
-
-        return new ResponseEntity<>(registeredAdmin, HttpStatus.CREATED);
+    public ResponseEntity<?> adminRegister(@RequestBody AdminModel adminModel) {
+        try {
+            AdminModel registeredAdmin = adminService.registerAdmin(adminModel);
+            return new ResponseEntity<>(registeredAdmin, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> adminLogin(@Valid @RequestParam String email, @RequestParam String password) {
-
-        try{
-            String loginResponse = adminService.adminLogin(email,password);
-            return new ResponseEntity<>(loginResponse,HttpStatus.OK);
-        }
-        catch (IllegalArgumentException e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.UNAUTHORIZED);
-
+    public ResponseEntity<String> adminLogin(@RequestBody AdminModel loginRequest) {
+        try {
+            String loginResponse = adminService.adminLogin(loginRequest.getEmail(), loginRequest.getPassword());
+            return new ResponseEntity<>(loginResponse, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 }

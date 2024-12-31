@@ -1,7 +1,10 @@
 package com.example.medical.store.Admin;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,6 +29,14 @@ public class AdminModel {
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
 
+    public int getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(int adminId) {
+        this.adminId = adminId;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -41,6 +52,4 @@ public class AdminModel {
     public void setPassword(String password) {
         this.password = password;
     }
-
-
 }
