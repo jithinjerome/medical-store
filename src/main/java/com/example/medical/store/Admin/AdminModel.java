@@ -1,5 +1,6 @@
 package com.example.medical.store.Admin;
 
+import com.example.medical.store.User.Role;
 import jakarta.persistence.*;
 
 import jakarta.validation.constraints.Email;
@@ -28,6 +29,17 @@ public class AdminModel {
     @NotBlank(message = "Password is required")
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public int getAdminId() {
         return adminId;

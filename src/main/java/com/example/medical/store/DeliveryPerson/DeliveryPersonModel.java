@@ -1,12 +1,11 @@
 package com.example.medical.store.DeliveryPerson;
 
+import com.example.medical.store.User.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 public class DeliveryPersonModel {
@@ -33,6 +32,9 @@ public class DeliveryPersonModel {
     @Enumerated(EnumType.STRING)
     @Column(name = "verification_status", nullable = false)
     private VerificationStatus verificationStatus;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     // Enum for Verification Status
     public enum VerificationStatus {
@@ -78,5 +80,13 @@ public class DeliveryPersonModel {
 
     public void setVerificationStatus(VerificationStatus verificationStatus) {
         this.verificationStatus = verificationStatus;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

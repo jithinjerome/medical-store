@@ -1,5 +1,6 @@
 package com.example.medical.store.MedicalStore;
 
+import com.example.medical.store.User.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -43,6 +44,17 @@ public class MedicalStoreModel {
 
     @Column(name = "longitude")
     private String longitude;
+
+    public static Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    @Enumerated(EnumType.STRING)
+    private static Role role;
 
     public int getStoreId() {
         return storeId;
