@@ -1,6 +1,7 @@
 package com.example.medical.store.DeliveryPerson;
 
 import com.example.medical.store.User.Role;
+import com.example.medical.store.User.VerificationStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -30,17 +31,13 @@ public class DeliveryPersonModel {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "verification_status", nullable = false)
+    @Column(name = "verification_status")
     private VerificationStatus verificationStatus;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    // Enum for Verification Status
-    public enum VerificationStatus {
-        VERIFIED,
-        NOT_VERIFIED
-    }
+
 
     public int getDeliveryPersonId() {
         return deliveryPersonId;

@@ -38,6 +38,12 @@ public class SecurityConfig {
                                 "/api/auth/medicalstore/register",
                                 "/api/auth/medicalstore/login"
                         ).permitAll()
+                        .requestMatchers(
+                                "/api/auth/medicalstore/allStores",
+                                "/api/auth/delivery-people/allDeliveryPersons",
+                                "/api/auth/medicalstore/verifiedStores",
+                                "/api/auth/medicalstore/notVerified"
+                        ).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

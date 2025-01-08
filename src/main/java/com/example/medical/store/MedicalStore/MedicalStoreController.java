@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/auth/medicalstore")
 public class MedicalStoreController {
@@ -33,5 +35,20 @@ public class MedicalStoreController {
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @GetMapping(path = "/allStores")
+    public ResponseEntity<List<MedicalStoreModel>> allStores(){
+        return medicalStoreService.allStores();
+    }
+
+    @GetMapping(path = "/verifiedStores")
+    public ResponseEntity<List<MedicalStoreModel>> verifiedStores(){
+        return medicalStoreService.verifiedStores();
+    }
+
+    @GetMapping(path = "/notVerified")
+    public ResponseEntity<List<MedicalStoreModel>> notVerifiedStores(){
+        return medicalStoreService.notVerifiedStores();
     }
 }

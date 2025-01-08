@@ -2,16 +2,18 @@ package com.example.medical.store.DeliveryPerson;
 
 import com.example.medical.store.JWT.JWTUtil;
 import com.example.medical.store.User.Role;
+import com.example.medical.store.User.VerificationStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
-
 @Service
 public class DeliveryPersonService {
 
@@ -32,7 +34,7 @@ public class DeliveryPersonService {
             throw new IllegalArgumentException("Delivery person with this email already exists");
         }
         if (deliveryPersonModel.getVerificationStatus() == null) {
-            deliveryPersonModel.setVerificationStatus(DeliveryPersonModel.VerificationStatus.NOT_VERIFIED);
+            deliveryPersonModel.setVerificationStatus(VerificationStatus.NOT_VERIFIED);
         }
         if (deliveryPersonModel.getRole() == null) {
             deliveryPersonModel.setRole(Role.DELIVERYPERSON);
@@ -56,5 +58,10 @@ public class DeliveryPersonService {
             }
         }
         throw new IllegalArgumentException("Invalid credentials: User not found");
+    }
+
+    public ResponseEntity<List<DeliveryPersonModel>> allDeliveryPersons() {
+        List<DeliveryPersonModel> deliveryPersons = deliveryPersonRepo.findAll();
+        return new ResponseEntity<>(deliveryPersons, HttpStatus.OK);
     }
 }

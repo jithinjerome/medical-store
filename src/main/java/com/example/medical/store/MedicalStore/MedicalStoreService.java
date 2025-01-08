@@ -3,11 +3,15 @@ package com.example.medical.store.MedicalStore;
 import com.example.medical.store.Admin.AdminModel;
 import com.example.medical.store.JWT.JWTUtil;
 import com.example.medical.store.User.Role;
+import com.example.medical.store.User.VerificationStatus;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,6 +31,9 @@ public class MedicalStoreService {
         if (existingMedicalStore.isPresent()) {
             throw new IllegalArgumentException("Medical store with this email already exists");
         }
+        if (medicalStoreModel.getVerificationStatus() == null) {
+            medicalStoreModel.setVerificationStatus(VerificationStatus.NOT_VERIFIED);
+        }
         if (MedicalStoreModel.getRole() == null) {
             medicalStoreModel.setRole(Role.MEDICALSTORE);
         }
@@ -45,5 +52,28 @@ public class MedicalStoreService {
             throw new IllegalArgumentException("Invalid Credentials: Password Missmatch");
         }
         throw new IllegalArgumentException("Invalid Credentials: User not found");
+    }
+
+    public ResponseEntity<List<MedicalStoreModel>> allStores() {
+        List<MedicalStoreModel> stores = medicalStoreRepo.findAll();
+        return new ResponseEntity<>(stores, HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<MedicalStoreModel>> verifiedStores() {
+        List<MedicalStoreModel> verifiedStores = medicalStoreRepo.findByVerificationStatus(VerificationStatus.VERIFIED);
+
+        if(verifiedStores.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(verifiedStores, HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<MedicalStoreModel>> notVerifiedStores() {
+        List<MedicalStoreModel> notVerifiedStores = medicalStoreRepo.findByVerificationStatus(VerificationStatus.NOT_VERIFIED);
+
+        if(notVerifiedStores.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(notVerifiedStores, HttpStatus.OK);
     }
 }
