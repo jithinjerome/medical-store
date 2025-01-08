@@ -1,7 +1,10 @@
 package com.example.medical.store.Admin;
 
 
+import com.example.medical.store.JWT.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -11,20 +14,25 @@ public class AdminService {
     @Autowired
     private AdminRepo adminRepo;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    public AdminModel registerAdmin(AdminModel adminModel) {
-        Optional<AdminModel> existingAdmin = adminRepo.findByEmail(adminModel.getEmail());
-        if (existingAdmin.isPresent()) {
-            throw new IllegalArgumentException("Admin with this email already exists");
-        }
-        return adminRepo.save(adminModel);
-    }
+    @Autowired
+    private JWTUtil jwtUtil;
+
 
     public String adminLogin( String email, String password) {
-        Optional<AdminModel> admin = adminRepo.findByEmail(email);
-        if (admin.isEmpty() || !admin.get().getPassword().equals(password)) {
-            throw new IllegalArgumentException("Invalid email or password");
+        Optional<AdminModel> adminOptional = adminRepo.findByEmail(email);
+        if(adminOptional.isPresent()){
+            AdminModel admin = adminOptional.get();
+
+            if(passwordEncoder.matches(password, admin.getPassword())){
+                return jwtUtil.generateToken(admin.getEmail(), admin.getRole().name());
+            }else{
+                throw new IllegalArgumentException("Invalid Credentials: Password mismatch");
+            }
         }
-        return "Admin logged in successfully";
+        throw new IllegalArgumentException("Invalid Credentials: User not found");
+
     }
 }

@@ -1,12 +1,18 @@
 package com.example.medical.store.Admin;
 
+import com.example.medical.store.User.Role;
 import jakarta.persistence.*;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class AdminModel {
 
     @Id
@@ -15,10 +21,25 @@ public class AdminModel {
     private int adminId;
 
     @Column(name = "email", nullable = false, unique = true)
+    @Email(message = "Invalid email address")
+    @NotBlank(message = "Email is required")
     private String email;
 
     @Column(name = "password", nullable = false)
+    @NotBlank(message = "Password is required")
+    @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public int getAdminId() {
         return adminId;

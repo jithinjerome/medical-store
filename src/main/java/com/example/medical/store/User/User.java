@@ -22,10 +22,14 @@ public class User {
     private String email;
     @Column(name = "Password")
     private String password;
+
     @Column(name = "Phone")
     private String phone;
     @Column(name = "Address")
     private String address;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public long getId() {
         return id;
@@ -74,4 +78,14 @@ public class User {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+
 }

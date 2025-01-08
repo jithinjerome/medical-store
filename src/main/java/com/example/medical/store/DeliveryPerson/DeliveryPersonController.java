@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/auth/delivery-people")
 public class DeliveryPersonController {
@@ -31,5 +33,10 @@ public class DeliveryPersonController {
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @GetMapping(path = "/allDeliveryPersons")
+    public ResponseEntity<List<DeliveryPersonModel>> allDeliveryPersons(){
+        return deliveryPersonService.allDeliveryPersons();
     }
 }

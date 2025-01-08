@@ -1,5 +1,7 @@
 package com.example.medical.store.MedicalStore;
 
+import com.example.medical.store.User.Role;
+import com.example.medical.store.User.VerificationStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -38,11 +40,35 @@ public class MedicalStoreModel {
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private VerificationStatus verificationStatus;
+
     @Column(name = "latitude")
     private String latitude;
 
     @Column(name = "longitude")
     private String longitude;
+
+    @Enumerated(EnumType.STRING)
+    private static Role role;
+
+
+    public static Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+
+    public VerificationStatus getVerificationStatus() {
+        return verificationStatus;
+    }
+
+    public void setVerificationStatus(VerificationStatus verificationStatus) {
+        this.verificationStatus = verificationStatus;
+    }
 
     public int getStoreId() {
         return storeId;

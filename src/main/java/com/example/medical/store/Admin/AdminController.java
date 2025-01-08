@@ -16,16 +16,6 @@ public class AdminController {
     private AdminService adminService;
 
 
-    @PostMapping("/register")
-    public ResponseEntity<?> adminRegister(@RequestBody AdminModel adminModel) {
-        try {
-            AdminModel registeredAdmin = adminService.registerAdmin(adminModel);
-            return new ResponseEntity<>(registeredAdmin, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @PostMapping("/login")
     public ResponseEntity<String> adminLogin(@RequestBody AdminModel loginRequest) {
         try {
