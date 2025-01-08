@@ -1,7 +1,6 @@
 package com.example.medical.store.MedicalStore;
 
 import com.example.medical.store.Admin.AdminModel;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,7 @@ public class MedicalStoreController {
     private MedicalStoreService medicalStoreService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> medicalStoreRegister(@Valid @RequestBody MedicalStoreModel medicalStoreModel) {
+    public ResponseEntity<?> medicalStoreRegister(@RequestBody MedicalStoreModel medicalStoreModel) {
         try{
             MedicalStoreModel registeredMedicalStore = medicalStoreService.registerMedicalStore(medicalStoreModel);
             return new ResponseEntity<>(registeredMedicalStore, HttpStatus.CREATED);

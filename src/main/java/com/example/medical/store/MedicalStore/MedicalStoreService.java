@@ -1,7 +1,6 @@
 package com.example.medical.store.MedicalStore;
 
 import com.example.medical.store.Admin.AdminModel;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +12,7 @@ public class MedicalStoreService {
     @Autowired
     private MedicalStoreRepo medicalStoreRepo;
 
-    public MedicalStoreModel registerMedicalStore(@Valid MedicalStoreModel medicalStoreModel) {
+    public MedicalStoreModel registerMedicalStore(MedicalStoreModel medicalStoreModel) {
         Optional<MedicalStoreModel> existingMedicalStore = medicalStoreRepo.findByEmail(medicalStoreModel.getEmail());
         if (existingMedicalStore.isPresent()) {
             throw new IllegalArgumentException("Medical store with this email already exists");

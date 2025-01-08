@@ -36,4 +36,9 @@ public class UserService {
         }
         return new ResponseEntity<>("Invalid Credentials",HttpStatus.BAD_REQUEST);
     }
+
+    public ResponseEntity<?> userLocation(String latitude, String longitude) {
+        String locationMessage = "User location saved: Latitude " + latitude + ", Longitude " + longitude;
+        return new ResponseEntity<>(locationMessage, HttpStatus.OK);
+    }
 }
