@@ -1,6 +1,8 @@
 package com.example.medical.store.User;
 
 import com.example.medical.store.JWT.JWTUtil;
+import com.example.medical.store.MedicalStore.MedicalStoreModel;
+import com.example.medical.store.MedicalStore.MedicalStoreRepo;
 import com.example.medical.store.User.User;
 import com.example.medical.store.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,6 +26,9 @@ public class UserService {
 
     @Autowired
     private JWTUtil jwtUtil;
+
+    @Autowired
+    private MedicalStoreRepo medicalStoreRepo;
 
 
     public ResponseEntity<?> registerUser(User user) {
@@ -57,8 +64,31 @@ public class UserService {
         return ResponseEntity.badRequest().body("Invalid credentials: User not found");
     }
 
-    public ResponseEntity<?> userLocation(String latitude, String longitude) {
-        String locationMessage = "User location saved: Latitude " + latitude + ", Longitude " + longitude;
-        return new ResponseEntity<>(locationMessage, HttpStatus.OK);
+
+    public List<MedicalStoreModel> findNearByStores(double latitude, double longitude, double radiusInKm) {
+        List<MedicalStoreModel> allStores = medicalStoreRepo.findAll();
+        List<MedicalStoreModel> nearByStores = new ArrayList<>();
+
+        for(MedicalStoreModel store: allStores){
+            if(store.getLatitude() != null && store.getLongitude() != null){
+                double distance = calculateDistance(latitude,longitude,store.getLatitude(),store.getLongitude());
+                if(distance <= radiusInKm){
+                    nearByStores.add(store);
+                }
+            }
+        }
+        return nearByStores;
+    }
+
+    private double calculateDistance(double lat1, double lon1, double lat2, double lon2){
+        final int EARTH_RADIUS =6371;
+        double latDistance = Math.toRadians(lat2-lat1);
+        double lonDistance = Math.toRadians(lon2-lon1);
+        double a = Math.sin(latDistance/2)*Math.sin(latDistance/2)
+                + Math.cos(Math.toRadians(lat1))*Math.cos(Math.toRadians(lat2))
+                *Math.sin(lonDistance/2)*Math.sin(lonDistance/2);
+        double c = 2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+
+        return EARTH_RADIUS * c;
     }
 }
