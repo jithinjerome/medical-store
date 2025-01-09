@@ -8,6 +8,9 @@ import com.example.medical.store.MedicalStore.MedicalStoreModel;
 import com.example.medical.store.MedicalStore.MedicalStoreRepo;
 import com.example.medical.store.User.User;
 import com.example.medical.store.User.UserRepository;
+import com.example.medical.store.MedicalStore.MedicalStoreModel;
+import com.example.medical.store.MedicalStore.MedicalStoreRepo;
+import com.example.medical.store.User.VerificationStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.http.HttpStatus;
@@ -17,12 +20,19 @@ import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
 import java.util.List;
+import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service
 public class AdminService {
     @Autowired
     private AdminRepo adminRepo;
+
+    @Autowired
+    private DeliveryPersonRepo deliveryPersonRepo;
+
+    @Autowired
+    private MedicalStoreRepo medicalStoreRepo;
 
     @Autowired
     private PasswordEncoder passwordEncoder;

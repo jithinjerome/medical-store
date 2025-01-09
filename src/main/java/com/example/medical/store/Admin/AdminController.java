@@ -1,9 +1,6 @@
 package com.example.medical.store.Admin;
 
 
-import com.example.medical.store.DeliveryPerson.DeliveryPersonModel;
-import com.example.medical.store.MedicalStore.MedicalStoreModel;
-import com.example.medical.store.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
