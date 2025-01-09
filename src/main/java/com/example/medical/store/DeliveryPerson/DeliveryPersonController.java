@@ -39,4 +39,14 @@ public class DeliveryPersonController {
     public ResponseEntity<List<DeliveryPersonModel>> allDeliveryPersons(){
         return deliveryPersonService.allDeliveryPersons();
     }
+
+    @GetMapping(path = "/verifiedPersons")
+    public ResponseEntity<List<DeliveryPersonModel>> verifeidPersons(){
+        return deliveryPersonService.verifiedPersons();
+    }
+
+    @GetMapping(path = "/notVerified")
+    public ResponseEntity<List<DeliveryPersonModel>> notVerifiedPersons(){
+        return deliveryPersonService.notVerifiedPerson();
+    }
 }

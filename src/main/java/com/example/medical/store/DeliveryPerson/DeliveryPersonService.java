@@ -64,4 +64,22 @@ public class DeliveryPersonService {
         List<DeliveryPersonModel> deliveryPersons = deliveryPersonRepo.findAll();
         return new ResponseEntity<>(deliveryPersons, HttpStatus.OK);
     }
+
+    public ResponseEntity<List<DeliveryPersonModel>> verifiedPersons() {
+        List<DeliveryPersonModel> verifiedPersons = deliveryPersonRepo.findByVerificationStatus(VerificationStatus.VERIFIED);
+
+        if(verifiedPersons.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(verifiedPersons, HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<DeliveryPersonModel>> notVerifiedPerson() {
+        List<DeliveryPersonModel> notVerified = deliveryPersonRepo.findByVerificationStatus(VerificationStatus.NOT_VERIFIED);
+
+        if(notVerified.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(notVerified, HttpStatus.OK);
+    }
 }

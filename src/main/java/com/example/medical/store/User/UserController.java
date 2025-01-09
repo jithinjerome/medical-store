@@ -1,8 +1,11 @@
 package com.example.medical.store.User;
 
+import com.example.medical.store.MedicalStore.MedicalStoreModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -12,6 +15,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private MedicalStoreModel medicalStoreModel;
 
     @PostMapping(path = "/register")
     public ResponseEntity<?> registerUser(@RequestBody User user){
@@ -24,7 +30,8 @@ public class UserController {
     }
 
     @GetMapping("/user-location")
-    public ResponseEntity<?> userLocation(@RequestParam String latitude,@RequestParam String longitude){
-        return userService.userLocation(latitude,longitude);
+    public ResponseEntity<List<MedicalStoreModel>> findNearByStores(@RequestParam double latitude, @RequestParam double longitude){
+        List<MedicalStoreModel> nearByStores =  userService.findNearByStores(latitude,longitude,5.0);
+        return ResponseEntity.ok(nearByStores);
     }
 }
