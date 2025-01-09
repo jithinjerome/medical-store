@@ -45,8 +45,12 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/auth/admin/allStores",
                                 "/api/auth/delivery-people/allDeliveryPersons",
+                                "/api/auth/delivery-people/verifiedPersons",
+                                "/api/auth/delivery-people/notVerified",
                                 "/api/auth/medicalstore/verifiedStores",
-                                "/api/auth/medicalstore/notVerified"
+                                "/api/auth/medicalstore/notVerified",
+                                "/api/auth/admin/verifyStore/{id}",
+                                "/api/auth/admin/verify/{id}"
                         ).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

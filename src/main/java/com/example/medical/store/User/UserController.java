@@ -16,8 +16,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private MedicalStoreModel medicalStoreModel;
 
     @PostMapping(path = "/register")
     public ResponseEntity<?> registerUser(@RequestBody User user){
