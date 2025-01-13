@@ -46,7 +46,8 @@ public class SecurityConfig {
                                 "/api/auth/medicalstore/verifiedStores",
                                 "/api/auth/medicalstore/notVerified",
                                 "/api/auth/admin/verifyStore/{id}",
-                                "/api/auth/admin/verify/{id}"
+                                "/api/auth/admin/verify/{id}",
+                                "/api/user/allUsers"
                         ).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

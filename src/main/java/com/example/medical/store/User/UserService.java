@@ -91,4 +91,12 @@ public class UserService {
 
         return EARTH_RADIUS * c;
     }
+
+    public ResponseEntity<List<User>> allUsers() {
+        List users = userRepository.findAll();
+        if(users.isEmpty()){
+            return new ResponseEntity<>(new ArrayList<>(),HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
 }

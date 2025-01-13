@@ -31,4 +31,9 @@ public class UserController {
         List<MedicalStoreModel> nearByStores =  userService.findNearByStores(latitude,longitude,5.0);
         return ResponseEntity.ok(nearByStores);
     }
+
+    @GetMapping(path = "/allUsers")
+    public ResponseEntity<List<User>> allUsers(){
+        return userService.allUsers();
+    }
 }
