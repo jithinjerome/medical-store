@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface MedicalStoreRepo extends JpaRepository<MedicalStoreModel,Integer>{
+public interface MedicalStoreRepo extends JpaRepository<MedicalStoreModel,Long>{
     Optional<MedicalStoreModel> findByEmail(@Email(message = "Invalid email address") String email);
 
     List<MedicalStoreModel> findByVerificationStatus(VerificationStatus verificationStatus);
