@@ -35,11 +35,15 @@ public class SecurityConfig {
                                 "/api/auth/delivery-people/register",
                                 "/api/auth/delivery-people/login",
                                 "/api/auth/admin/login",
+                                "/api/auth/admin/users",
                                 "/api/auth/medicalstore/register",
-                                "/api/auth/medicalstore/login"
+                                "/api/auth/medicalstore/login",
+                                "/api/auth/admin/allStores",
+                                "/api/auth/admin/delivery-persons"
+
                         ).permitAll()
                         .requestMatchers(
-                                "/api/auth/medicalstore/allStores",
+                                "/api/auth/admin/allStores",
                                 "/api/auth/delivery-people/allDeliveryPersons",
                                 "/api/auth/medicalstore/verifiedStores",
                                 "/api/auth/medicalstore/notVerified"
