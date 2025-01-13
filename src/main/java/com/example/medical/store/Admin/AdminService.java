@@ -29,16 +29,19 @@ public class AdminService {
     private AdminRepo adminRepo;
 
     @Autowired
-    private DeliveryPersonRepo deliveryPersonRepo;
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JWTUtil jwtUtil;
+
+    @Autowired
+    private UserRepository userRepo;
 
     @Autowired
     private MedicalStoreRepo medicalStoreRepo;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private JWTUtil jwtUtil;
+    private DeliveryPersonRepo deliveryPersonRepo;
 
     @Autowired
     private UserRepository userRepo;
@@ -97,5 +100,17 @@ public class AdminService {
         }else{
             throw new IllegalArgumentException("No store found with this ID");
         }
+    }
+
+    public List<User> getAllUsers() {
+        return userRepo.findAll();
+    }
+
+    public List<MedicalStoreModel> getAllMedicalStores() {
+        return medicalStoreRepo.findAll();
+    }
+
+    public List<DeliveryPersonModel> getAllDeliveryPersons() {
+        return deliveryPersonRepo.findAll();
     }
 }
