@@ -5,6 +5,7 @@ import com.example.medical.store.User.VerificationStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -25,6 +26,11 @@ public class DeliveryPersonModel {
     @NotBlank(message = "Email is required")
     private String email;
 
+    @Column(name = "phone_number", nullable = false)
+    @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
+    private String contactNo;
+
+
     @Column(name = "password", nullable = false)
     @NotBlank(message = "Password is required")
     @Size(min = 8, message = "Password must be at least 8 characters long")
@@ -36,7 +42,6 @@ public class DeliveryPersonModel {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
 
 
     public int getDeliveryPersonId() {
@@ -61,6 +66,13 @@ public class DeliveryPersonModel {
 
     public void setEmail(@Email(message = "Invalid email address") @NotBlank(message = "Email is required") String email) {
         this.email = email;
+    }
+    public @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits") String getContactNo() {
+        return contactNo;
+    }
+
+    public void setContactNo(@Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits") String contactNo) {
+        this.contactNo = contactNo;
     }
 
     public @NotBlank(message = "Password is required") @Size(min = 8, message = "Password must be at least 8 characters long") String getPassword() {
