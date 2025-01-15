@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@CrossOrigin
 @RestController
 @RequestMapping(path = "/api/user")
 public class UserController {
@@ -35,5 +35,25 @@ public class UserController {
     @GetMapping(path = "/allUsers")
     public ResponseEntity<List<User>> allUsers(){
         return userService.allUsers();
+    }
+
+    @PostMapping(path = "/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestParam String email){
+        try{
+            userService.sendOtp(email);
+            return ResponseEntity.ok("OTP send to your email");
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping(path = "/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestParam String otp, @RequestParam String newPassword){
+        try{
+            userService.resetPassword(otp, newPassword);
+            return ResponseEntity.ok("Password Reset Successfully");
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

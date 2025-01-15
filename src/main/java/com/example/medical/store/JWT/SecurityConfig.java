@@ -32,6 +32,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/user/register",
                                 "/api/user/login",
+                                "/api/user/forgot-password",
+                                "/api/user/reset-password",
                                 "/api/auth/delivery-people/register",
                                 "/api/auth/delivery-people/login",
                                 "/api/auth/admin/login",
