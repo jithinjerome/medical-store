@@ -70,10 +70,10 @@ public class AdminController {
 
     }
 
-    @PutMapping(path = "/verifyStore/{id}")
-    public ResponseEntity<?> verifyStore(@PathVariable int id){
+    @PutMapping(path = "/verifyStore/{storeId}")
+    public ResponseEntity<?> verifyStore(@PathVariable int storeId){
         try{
-            MedicalStoreModel verifiedStore = adminService.verifiedStore(id);
+            MedicalStoreModel verifiedStore = adminService.verifiedStore(storeId);
             return new ResponseEntity<>(verifiedStore, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);

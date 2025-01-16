@@ -15,27 +15,30 @@ public class MedicalStoreModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int storeId;
 
-    @Column(name = "medical_store_name", nullable = false)
+    @Column(name = "medical_store_name")
     @NotBlank(message = "Store name is required")
     private String storeName;
-    @Column(name = "storeownername", nullable = false)
+
+    @Column(name = "storeownername")
     @NotBlank(message = "Store Owner name is required")
     private String storeOwnerName;
 
-
-    @Column(name = "address", nullable = false)
+    @Column(name = "address")
     @NotBlank(message = "Store address is required")
     private String storeAddress;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(name = "license_no")
+    private String licenseNo;
+
+    @Column(name = "phone_number")
     @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
     private String contactNo;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", unique = true)
     @Email(message = "Invalid email address")
     private String email;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     @NotBlank(message = "Password is required")
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
@@ -50,15 +53,17 @@ public class MedicalStoreModel {
     private Double longitude;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private static Role role;
 
-    public Role getRole() {
+
+    public static Role getRole() {
         return role;
     }
 
     public void setRole(Role role) {
         this.role = role;
     }
+
 
     public VerificationStatus getVerificationStatus() {
         return verificationStatus;
@@ -99,7 +104,15 @@ public class MedicalStoreModel {
         this.storeAddress = storeAddress;
     }
 
-    public @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits") String getContactNo() {
+    public String getLicenseNo() {
+        return licenseNo;
+    }
+
+    public void setLicenseNo(String licenseNo) {
+        this.licenseNo = licenseNo;
+    }
+
+    public String getContactNo() {
         return contactNo;
     }
 
