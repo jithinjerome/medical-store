@@ -47,6 +47,16 @@ public class UserController {
         }
     }
 
+    @PostMapping(path = "/verify")
+    public ResponseEntity<?> verifyOTP(@RequestParam String otp){
+        try{
+            userService.verifyOTP(otp);
+            return ResponseEntity.ok("OTP verified Successfullt");
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @PostMapping(path = "/reset-password")
     public ResponseEntity<?> resetPassword(@RequestParam String otp, @RequestParam String newPassword){
         try{
@@ -55,5 +65,10 @@ public class UserController {
         }catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<?> getUser(@PathVariable long id){
+        return userService.getUsers(id);
     }
 }

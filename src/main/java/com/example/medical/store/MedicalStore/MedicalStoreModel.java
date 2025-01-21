@@ -50,17 +50,15 @@ public class MedicalStoreModel {
     private Double longitude;
 
     @Enumerated(EnumType.STRING)
-    private static Role role;
+    private Role role;
 
-
-    public static Role getRole() {
+    public Role getRole() {
         return role;
     }
 
     public void setRole(Role role) {
         this.role = role;
     }
-
 
     public VerificationStatus getVerificationStatus() {
         return verificationStatus;

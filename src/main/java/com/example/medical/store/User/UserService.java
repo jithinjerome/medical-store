@@ -13,6 +13,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -148,5 +149,25 @@ public class UserService {
         user.setOtp(null);
         user.setOtpExpiration(null);
         userRepository.save(user);
+    }
+
+    public ResponseEntity<?> getUsers(long id) {
+        Optional<User> userOptional= userRepository.findById(id);
+        if(userOptional.isPresent()){
+            User user = userOptional.get();
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+    }
+
+    public void verifyOTP(String otp) {
+        Optional<User> userOptional = userRepository.findByOtp(otp);
+        if(userOptional.isEmpty()){
+            throw new IllegalArgumentException("Invalid OTP");
+        }
+        User user = userOptional.get();
+        if(user.getOtpExpiration().isBefore(LocalDateTime.now())){
+            throw new IllegalArgumentException("OTP expired");
+        }
     }
 }
