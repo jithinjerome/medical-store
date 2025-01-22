@@ -43,7 +43,13 @@ public class SecurityConfig {
                                 "/api/auth/medical-store/login",
                                 "/api/auth/admin/allStores",
                                 "/api/auth/admin/delivery-persons",
-                                "/api/auth/admin/verifyStore/{id}"
+                                "/api/auth/admin/verifyStore/{id}",
+                                "/api/auth/admin/revokeVerifyStore/{storeId}",
+                                "/api/auth/admin/verifyDeliveryPerson/{id}",
+                                "/api/auth/admin/revokeDeliveryPerson/{id}",
+                                "/api/auth/admin/removeStore/{id}",
+                                "/api/auth/admin/removeDeliveryPerson/{id}"
+
                         ).permitAll()
                         .requestMatchers(
                                 "/api/auth/admin/allStores",
@@ -54,7 +60,12 @@ public class SecurityConfig {
                                 "/api/auth/medical-store/notVerified",
                                 "/api/auth/admin/verifyStore/{id}",
                                 "/api/auth/admin/verify/{id}",
-                                "/api/user/allUsers"
+                                "/api/user/allUsers",
+                                "/api/auth/admin/revokeVerifyStore/{storeId}",
+                                "/api/auth/admin/verifyDeliveryPerson/{id}",
+                                "/api/auth/admin/revokeDeliveryPerson/{id}",
+                                "/api/auth/admin/removeStore/{id}",
+                                "/api/auth/admin/removeDeliveryPerson/{id}"
                         ).hasRole("ADMIN")
                         .requestMatchers
                                 (

@@ -79,4 +79,50 @@ public class AdminController {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
         }
     }
+    @PutMapping(path = "/revokeVerifyStore/{storeId}")
+    public ResponseEntity<?> revokeVerifyStore(@PathVariable int storeId){
+        try{
+            MedicalStoreModel verifiedStore = adminService.revokeVerifiedStore(storeId);
+            return new ResponseEntity<>(verifiedStore, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping(path = "/verifyDeliveryPerson/{id}")
+    public ResponseEntity<?> verifyDeliveryPerson(@PathVariable int id){
+        try{
+            DeliveryPersonModel verifyDeliveryPerson = adminService.verifyDeliveryPerson(id);
+            return new ResponseEntity<>(verifyDeliveryPerson, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+        }
+    }
+    @PutMapping(path = "/revokeDeliveryPerson/{id}")
+    public ResponseEntity<?> revokeDeliveryPerson(@PathVariable int id){
+        try{
+            DeliveryPersonModel revokeDeliveryPerson = adminService.revokeDeliveryPerson(id);
+            return new ResponseEntity<>(revokeDeliveryPerson, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+        }
+    }
+    @DeleteMapping(path = "/removeDeliveryPerson/{id}")
+    public ResponseEntity<?> removeDeliveryPerson(@PathVariable int id) {
+        try {
+            adminService.removeDeliveryPerson(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // No response body
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+    @DeleteMapping(path = "/removeStore/{id}")
+    public ResponseEntity<?> removeStore(@PathVariable int id) {
+        try {
+            adminService.removeStore(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // No response body
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 }
