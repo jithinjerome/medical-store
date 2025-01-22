@@ -40,7 +40,16 @@ public class SecurityConfig {
                                 "/api/auth/admin/login",
                                 "/api/auth/admin/users",
                                 "/api/auth/medical-store/register",
-                                "/api/auth/medical-store/login"
+                                "/api/auth/medical-store/login",
+                                "/api/auth/admin/allStores",
+                                "/api/auth/admin/delivery-persons",
+                                "/api/auth/admin/verifyStore/{id}",
+                                "/api/auth/admin/revokeVerifyStore/{storeId}",
+                                "/api/auth/admin/verifyDeliveryPerson/{id}",
+                                "/api/auth/admin/revokeDeliveryPerson/{id}",
+                                "/api/auth/admin/removeStore/{id}",
+                                "/api/auth/admin/removeDeliveryPerson/{id}",
+                                "/api/auth/admin//uploadLicense/{storeId}"
 
                         ).permitAll()
                         .requestMatchers(
