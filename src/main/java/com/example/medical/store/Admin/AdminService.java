@@ -7,47 +7,28 @@ import com.example.medical.store.JWT.JWTUtil;
 import com.example.medical.store.MedicalStore.MedicalStoreModel;
 import com.example.medical.store.MedicalStore.MedicalStoreRepo;
 import com.example.medical.store.User.VerificationStatus;
-import com.example.medical.store.MedicalStore.MedicalStoreModel;
-import com.example.medical.store.MedicalStore.MedicalStoreRepo;
 import com.example.medical.store.User.User;
 import com.example.medical.store.User.UserRepository;
-import com.example.medical.store.MedicalStore.MedicalStoreModel;
-import com.example.medical.store.MedicalStore.MedicalStoreRepo;
-import com.example.medical.store.User.VerificationStatus;
-import com.example.medical.store.MedicalStore.MedicalStoreModel;
-import com.example.medical.store.MedicalStore.MedicalStoreRepo;
-import com.example.medical.store.User.User;
-import com.example.medical.store.User.UserRepository;
-import com.example.medical.store.User.VerificationStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.text.html.Option;
+import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class AdminService {
     @Autowired
     private AdminRepo adminRepo;
-
-    @Autowired
-    private DeliveryPersonRepo deliveryPersonRepo;
-
-    @Autowired
-    private MedicalStoreRepo medicalStoreRepo;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     private JWTUtil jwtUtil;
 
-    @Autowired
-    private UserRepository userRepo;
 
     @Autowired
     private MedicalStoreRepo medicalStoreRepo;
@@ -58,11 +39,6 @@ public class AdminService {
     @Autowired
     private UserRepository userRepo;
 
-    @Autowired
-    private MedicalStoreRepo medicalStoreRepo;
-
-    @Autowired
-    private DeliveryPersonRepo deliveryPersonRepo;
 
 
     public String adminLogin( String email, String password) {
@@ -101,40 +77,13 @@ public class AdminService {
             throw new IllegalArgumentException("No store found with this ID");
         }
     }
-
-    public List<User> getAllUsers() {
-        return userRepo.findAll();
+    public void uploadLicense(int storeId, MultipartFile file) throws IOException {
+        MedicalStoreModel store = medicalStoreRepo.findById(storeId)
+                .orElseThrow(() -> new IllegalArgumentException("Store not found"));
+        store.setLicenseImage(file.getBytes());
+        medicalStoreRepo.save(store);
     }
 
-    public List<MedicalStoreModel> getAllMedicalStores() {
-        return medicalStoreRepo.findAll();
-    }
-
-    public List<DeliveryPersonModel> getAllDeliveryPersons() {
-        return deliveryPersonRepo.findAll();
-    }
-
-    public DeliveryPersonModel verifiedPerson(int id){
-        Optional<DeliveryPersonModel> deliveryPerson = deliveryPersonRepo.findById(id);
-        if(deliveryPerson.isPresent()){
-            DeliveryPersonModel persons = deliveryPerson.get();
-            persons.setVerificationStatus(VerificationStatus.VERIFIED);
-            return deliveryPersonRepo.save(persons);
-        }else {
-            throw new IllegalArgumentException("No person found with this ID");
-        }
-    }
-
-    public MedicalStoreModel verifiedStore(int id) {
-        Optional<MedicalStoreModel> medicalStore = medicalStoreRepo.findById(id);
-        if(medicalStore.isPresent()){
-            MedicalStoreModel verifiedStore = medicalStore.get();
-            verifiedStore.setVerificationStatus(VerificationStatus.VERIFIED);
-            return medicalStoreRepo.save(verifiedStore);
-        }else{
-            throw new IllegalArgumentException("No store found with this ID");
-        }
-    }
     public MedicalStoreModel revokeVerifiedStore(int id) {
         Optional<MedicalStoreModel> medicalStore = medicalStoreRepo.findById(id);
         if(medicalStore.isPresent()){

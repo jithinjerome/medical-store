@@ -3,10 +3,12 @@ package com.example.medical.store.Admin;
 
 import com.example.medical.store.DeliveryPerson.DeliveryPersonModel;
 import com.example.medical.store.MedicalStore.MedicalStoreModel;
+import com.example.medical.store.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -42,16 +44,6 @@ public class AdminController {
 
     }
 
-    @PutMapping(path = "/verifyStore/{id}")
-    public ResponseEntity<?> verifyStore(@PathVariable int id){
-        try{
-            MedicalStoreModel verifiedStore = adminService.verifiedStore(id);
-            return new ResponseEntity<>(verifiedStore, HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
-        }
-    }
-
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
         try {
@@ -81,17 +73,6 @@ public class AdminController {
     }
 
 
-    @PutMapping(path = "/verify/{id}")
-    public ResponseEntity<?> verifyPerson(@PathVariable int id){
-        try{
-            DeliveryPersonModel verifiedPerson = adminService.verifiedPerson(id);
-            return new ResponseEntity<>(verifiedPerson,HttpStatus.OK);
-        }catch(Exception e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
-        }
-
-    }
-
     @PutMapping(path = "/verifyStore/{storeId}")
     public ResponseEntity<?> verifyStore(@PathVariable int storeId){
         try{
@@ -101,6 +82,16 @@ public class AdminController {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
         }
     }
+    @PostMapping("/uploadLicense/{storeId}")
+    public ResponseEntity<String> uploadLicense(@PathVariable int storeId, @RequestParam("file") MultipartFile file) {
+        try {
+            adminService.uploadLicense(storeId, file);
+            return new ResponseEntity<>("License uploaded successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PutMapping(path = "/revokeVerifyStore/{storeId}")
     public ResponseEntity<?> revokeVerifyStore(@PathVariable int storeId){
         try{

@@ -52,6 +52,19 @@ public class MedicalStoreModel {
     @Column(name = "longitude")
     private Double longitude;
 
+    @Column(name = "license_image", columnDefinition = "BYTEA")
+    private byte[] licenseImage;
+
+    // Getter and Setter
+    public byte[] getLicenseImage() {
+        return licenseImage;
+    }
+
+    public void setLicenseImage(byte[] licenseImage) {
+        this.licenseImage = licenseImage;
+    }
+
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
