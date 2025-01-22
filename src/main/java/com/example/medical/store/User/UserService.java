@@ -8,15 +8,24 @@ import com.example.medical.store.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService {
+
+    @Autowired
+    private JavaMailSender javaMailSender;
 
     @Autowired
     private UserRepository userRepository;
@@ -98,5 +107,69 @@ public class UserService {
             return new ResponseEntity<>(new ArrayList<>(),HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    public void sendOtp(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if(userOptional.isEmpty()){
+            throw new IllegalArgumentException("User not found with the email");
+        }
+
+        User user = userOptional.get();
+        String otp = generateOtp();
+        user.setOtp(otp);
+        user.setOtpExpiration(LocalDateTime.now().plusMinutes(10));
+        userRepository.save(user);
+
+        sendOtpEmail(email, otp);
+    }
+
+    private void sendOtpEmail(String to, String otp) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject("Password Reset OTP");
+        message.setText("Your OTP for reset is : " + otp);
+        javaMailSender.send(message);
+    }
+
+    private String generateOtp() {
+        return String.valueOf((int)(Math.random() * 900000) + 100000);
+    }
+
+    public void resetPassword(String otp, String newPassword) {
+        Optional<User> userOptional = userRepository.findByOtp(otp);
+        if(userOptional.isEmpty()){
+            throw new IllegalArgumentException("Invalid OTP");
+        }
+        User user = userOptional.get();
+        if(user.getOtpExpiration().isBefore(LocalDateTime.now())){
+            throw new IllegalArgumentException("OTP has Expired");
+        }
+
+        String hashedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(hashedPassword);
+        user.setOtp(null);
+        user.setOtpExpiration(null);
+        userRepository.save(user);
+    }
+
+    public ResponseEntity<?> getUsers(long id) {
+        Optional<User> userOptional= userRepository.findById(id);
+        if(userOptional.isPresent()){
+            User user = userOptional.get();
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+    }
+
+    public void verifyOTP(String otp) {
+        Optional<User> userOptional = userRepository.findByOtp(otp);
+        if(userOptional.isEmpty()){
+            throw new IllegalArgumentException("Invalid OTP");
+        }
+        User user = userOptional.get();
+        if(user.getOtpExpiration().isBefore(LocalDateTime.now())){
+            throw new IllegalArgumentException("OTP expired");
+        }
     }
 }

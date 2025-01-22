@@ -31,6 +31,27 @@ public class AdminController {
         }
     }
 
+    @PutMapping(path = "/verify/{id}")
+    public ResponseEntity<?> verifyPerson(@PathVariable int id){
+        try{
+            DeliveryPersonModel verifiedPerson = adminService.verifiedPerson(id);
+            return new ResponseEntity<>(verifiedPerson,HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    @PutMapping(path = "/verifyStore/{id}")
+    public ResponseEntity<?> verifyStore(@PathVariable int id){
+        try{
+            MedicalStoreModel verifiedStore = adminService.verifiedStore(id);
+            return new ResponseEntity<>(verifiedStore, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
         try {

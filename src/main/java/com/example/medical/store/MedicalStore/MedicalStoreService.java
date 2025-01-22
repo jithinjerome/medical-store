@@ -34,7 +34,7 @@ public class MedicalStoreService {
         if (medicalStoreModel.getVerificationStatus() == null) {
             medicalStoreModel.setVerificationStatus(VerificationStatus.NOT_VERIFIED);
         }
-        if (MedicalStoreModel.getRole() == null) {
+        if (medicalStoreModel.getRole() == null) {
             medicalStoreModel.setRole(Role.MEDICALSTORE);
         }
         medicalStoreModel.setPassword(passwordEncoder.encode(medicalStoreModel.getPassword()));
@@ -47,7 +47,7 @@ public class MedicalStoreService {
         if(medicalStoreOptional.isPresent()){
             MedicalStoreModel medicalStore = medicalStoreOptional.get();
             if(passwordEncoder.matches(password, medicalStore.getPassword())){
-                return jwtUtil.generateToken(medicalStore.getEmail(), MedicalStoreModel.getRole().name());
+                return jwtUtil.generateToken(medicalStore.getEmail(), medicalStore.getRole().name());
             }
             throw new IllegalArgumentException("Invalid Credentials: Password Missmatch");
         }

@@ -4,6 +4,9 @@ import com.example.medical.store.User.Role;
 import com.example.medical.store.User.VerificationStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 public class MedicalStoreModel {
@@ -50,16 +53,16 @@ public class MedicalStoreModel {
     private Double longitude;
 
     @Enumerated(EnumType.STRING)
-    private static Role role;
+    private Role role;
 
-    // Getters and setters
-    public static Role getRole() {
+    public Role getRole() {
         return role;
     }
 
     public void setRole(Role role) {
         this.role = role;
     }
+
 
     public VerificationStatus getVerificationStatus() {
         return verificationStatus;
@@ -113,23 +116,23 @@ public class MedicalStoreModel {
         return contactNo;
     }
 
-    public void setContactNo(String contactNo) {
+    public void setContactNo(@Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits") String contactNo) {
         this.contactNo = contactNo;
     }
 
-    public String getEmail() {
+    public @Email(message = "Invalid email address") String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(@Email(message = "Invalid email address") String email) {
         this.email = email;
     }
 
-    public String getPassword() {
+    public @NotBlank(message = "Password is required") @Size(min = 8, message = "Password must be at least 8 characters long") String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(@NotBlank(message = "Password is required") @Size(min = 8, message = "Password must be at least 8 characters long") String password) {
         this.password = password;
     }
 

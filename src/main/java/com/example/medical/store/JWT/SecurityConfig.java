@@ -32,6 +32,9 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/user/register",
                                 "/api/user/login",
+                                "/api/user/forgot-password",
+                                "/api/user/verify",
+                                "/api/user/reset-password",
                                 "/api/auth/delivery-people/register",
                                 "/api/auth/delivery-people/login",
                                 "/api/auth/admin/login",
@@ -53,6 +56,13 @@ public class SecurityConfig {
                                 "/api/auth/delivery-people/allDeliveryPersons",
                                 "/api/auth/delivery-people/verifiedPersons",
                                 "/api/auth/delivery-people/notVerified",
+                                "/api/auth/medicalstore/verifiedStores",
+                                "/api/auth/medicalstore/notVerified",
+                                "/api/auth/admin/verifyStore/{id}",
+                                "/api/auth/admin/verify/{id}",
+                                "/api/user/allUsers",
+                                "/api/auth/delivery-people/verifiedPersons",
+                                "/api/auth/delivery-people/notVerified",
                                 "/api/auth/medical-store/verifiedStores",
                                 "/api/auth/medical-store/notVerified",
                                 "/api/auth/admin/verifyStore/{id}",
@@ -64,6 +74,15 @@ public class SecurityConfig {
                                 "/api/auth/admin/removeStore/{id}",
                                 "/api/auth/admin/removeDeliveryPerson/{id}"
                         ).hasRole("ADMIN")
+                        .requestMatchers
+                                (
+                                        "/api/user/{id}",
+                                        "/api/request/send"
+
+                                ).hasRole("USER")
+                        .requestMatchers(
+                                "/api/bill/generate"
+                        ).hasRole("MEDICALSTORE")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

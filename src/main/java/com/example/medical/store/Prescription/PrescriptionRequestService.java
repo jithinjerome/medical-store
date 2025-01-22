@@ -2,6 +2,7 @@ package com.example.medical.store.Prescription;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ public class PrescriptionRequestService {
     private PrescriptionRepository prescriptionRepository;
 
 
-    public ResponseEntity<?> prescriptionRequest(long prescriptionId, long storeId) {
+    public ResponseEntity<?> prescriptionRequest(long prescriptionId, int storeId) {
         Optional<Prescription> prescriptionOptional = prescriptionRepository.findById(prescriptionId);
         if(prescriptionOptional.isPresent()){
             Prescription prescription = prescriptionOptional.get();
@@ -29,13 +30,16 @@ public class PrescriptionRequestService {
 
             PrescriptionRequest saved = prescriptionRequestRepository.save(prescriptionRequest);
 
-            PrescriptionResponseDTO response = new PrescriptionResponseDTO(saved,
-                    prescription.getUrgency(),
-                    prescription.getDeliveryType(),
-                    prescription.getStatus()
-            );
-            return new ResponseEntity<>(response,HttpStatus.OK);
+            PrescriptionResponseDTO responseDTO = new PrescriptionResponseDTO();
+            responseDTO.setPrescriptionId(prescriptionId);
+            responseDTO.setRequestDate(saved.getRequestDate());
+            responseDTO.setStoreId(saved.getStoreId());
+            responseDTO.setStatus(prescription.getStatus());
+            responseDTO.setUrgency(prescription.getUrgency());
+            responseDTO.setDeliveryType(prescription.getDeliveryType());
 
+
+            return new ResponseEntity<>(responseDTO,HttpStatus.OK);
 
         }
         return new ResponseEntity<>("Prescription not found", HttpStatus.NOT_FOUND);

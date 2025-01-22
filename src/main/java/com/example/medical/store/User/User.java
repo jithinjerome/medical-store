@@ -4,6 +4,9 @@ package com.example.medical.store.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @Table(name = "Users")
@@ -28,8 +31,27 @@ public class User {
     @Column(name = "Address")
     private String address;
 
+    public String getOtp() {
+        return otp;
+    }
+
+    public void setOtp(String otp) {
+        this.otp = otp;
+    }
+
+    public LocalDateTime getOtpExpiration() {
+        return otpExpiration;
+    }
+
+    public void setOtpExpiration(LocalDateTime otpExpiration) {
+        this.otpExpiration = otpExpiration;
+    }
+
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    private String otp;
+    private LocalDateTime otpExpiration;
 
     public long getId() {
         return id;
