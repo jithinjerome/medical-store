@@ -7,7 +7,11 @@ import com.example.medical.store.Prescription.Prescription;
 import com.example.medical.store.Prescription.PrescriptionRepository;
 import com.example.medical.store.Prescription.PrescriptionRequest;
 import com.example.medical.store.Prescription.PrescriptionRequestRepository;
+import com.example.medical.store.User.User;
+import com.example.medical.store.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -31,6 +35,9 @@ public class BillingService {
 
     @Autowired
     private MedicalStoreRepo medicalStoreRepo;
+
+    @Autowired
+    private UserRepository userRepository;
 
 
     private static final BigDecimal GST = new BigDecimal("0.18");
@@ -89,5 +96,14 @@ public class BillingService {
 
         return billingRepository.save(billing);
 
+    }
+
+    public List billingByUser(long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if(userOptional.isEmpty()){
+            return new ArrayList<>();
+        }
+        User user = userOptional.get();
+        return billingRepository.findByUserId(userId);
     }
 }

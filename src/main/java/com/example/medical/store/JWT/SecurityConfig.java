@@ -55,7 +55,8 @@ public class SecurityConfig {
                         .requestMatchers
                                 (
                                         "/api/user/{id}",
-                                        "/api/request/send"
+                                        "/api/request/send",
+                                        "/api/bill/{userId}"
 
                                 ).hasRole("USER")
                         .requestMatchers(
