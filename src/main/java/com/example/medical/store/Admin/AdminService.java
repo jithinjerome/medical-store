@@ -55,18 +55,6 @@ public class AdminService {
         throw new IllegalArgumentException("Invalid Credentials: User not found");
 
     }
-
-    public DeliveryPersonModel verifiedPerson(int id){
-        Optional<DeliveryPersonModel> deliveryPerson = deliveryPersonRepo.findById(id);
-        if(deliveryPerson.isPresent()){
-            DeliveryPersonModel persons = deliveryPerson.get();
-            persons.setVerificationStatus(VerificationStatus.VERIFIED);
-            return deliveryPersonRepo.save(persons);
-        }else {
-            throw new IllegalArgumentException("No person found with this ID");
-        }
-    }
-
     public MedicalStoreModel verifiedStore(int id) {
         Optional<MedicalStoreModel> medicalStore = medicalStoreRepo.findById(id);
         if(medicalStore.isPresent()){
@@ -77,13 +65,6 @@ public class AdminService {
             throw new IllegalArgumentException("No store found with this ID");
         }
     }
-    public void uploadLicense(int storeId, MultipartFile file) throws IOException {
-        MedicalStoreModel store = medicalStoreRepo.findById(storeId)
-                .orElseThrow(() -> new IllegalArgumentException("Store not found"));
-        store.setLicenseImage(file.getBytes());
-        medicalStoreRepo.save(store);
-    }
-
     public MedicalStoreModel revokeVerifiedStore(int id) {
         Optional<MedicalStoreModel> medicalStore = medicalStoreRepo.findById(id);
         if(medicalStore.isPresent()){
@@ -92,6 +73,16 @@ public class AdminService {
             return medicalStoreRepo.save(revokeVerifiedStore);
         }else{
             throw new IllegalArgumentException("No store found with this ID");
+        }
+    }
+    public DeliveryPersonModel verifiedPerson(int id){
+        Optional<DeliveryPersonModel> deliveryPerson = deliveryPersonRepo.findById(id);
+        if(deliveryPerson.isPresent()){
+            DeliveryPersonModel persons = deliveryPerson.get();
+            persons.setVerificationStatus(VerificationStatus.VERIFIED);
+            return deliveryPersonRepo.save(persons);
+        }else {
+            throw new IllegalArgumentException("No person found with this ID");
         }
     }
     public DeliveryPersonModel verifyDeliveryPerson(int id) {
@@ -114,20 +105,15 @@ public class AdminService {
             throw new IllegalArgumentException("No store found with this ID");
         }
     }
-
     public List<User> getAllUsers() {
         return userRepo.findAll();
     }
-
     public List<MedicalStoreModel> getAllMedicalStores() {
         return medicalStoreRepo.findAll();
     }
-
     public List<DeliveryPersonModel> getAllDeliveryPersons() {
         return deliveryPersonRepo.findAll();
     }
-
-
     public void removeDeliveryPerson(int id) {
         if (deliveryPersonRepo.existsById(id)) {
             deliveryPersonRepo.deleteById(id);
@@ -135,7 +121,6 @@ public class AdminService {
             throw new IllegalArgumentException("No delivery person found with this ID");
         }
     }
-
     public void removeStore(int id) {
         if(medicalStoreRepo.existsById(id)){
             medicalStoreRepo.deleteById(id);

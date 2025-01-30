@@ -35,22 +35,22 @@ public class SecurityConfig {
                                 "/api/user/forgot-password",
                                 "/api/user/verify",
                                 "/api/user/reset-password",
-                                "/api/auth/delivery-people/register",
-                                "/api/auth/delivery-people/login",
+                                "/api/auth/delivery-person/register",
+                                "/api/auth/delivery-person/login",
                                 "/api/auth/admin/login",
                                 "/api/auth/admin/users",
-                                "/api/auth/medical-store/register",
                                 "/api/auth/medical-store/login",
+                                "/api/auth/medical-store/register",
+                                "/api/auth/medical-store/allStores",
                                 "/api/auth/admin/allStores",
-                                "/api/auth/admin/delivery-persons",
+                                "/api/auth/admin/delivery-person",
                                 "/api/auth/admin/verifyStore/{id}",
-                                "/api/auth/admin/revokeVerifyStore/{storeId}",
+                                "/api/auth/admin/revokeStore/{storeId}",
                                 "/api/auth/admin/verifyDeliveryPerson/{id}",
                                 "/api/auth/admin/revokeDeliveryPerson/{id}",
                                 "/api/auth/admin/removeStore/{id}",
                                 "/api/auth/admin/removeDeliveryPerson/{id}",
-                                "/api/auth/admin//uploadLicense/{storeId}"
-
+                                "/api/auth/admin/uploadLicense/{storeId}"
                         ).permitAll()
                         .requestMatchers(
                                 "/api/auth/admin/allStores",
@@ -68,7 +68,6 @@ public class SecurityConfig {
                                 "/api/auth/medical-store/notVerified",
                                 "/api/auth/admin/verifyStore/{id}",
                                 "/api/auth/admin/verify/{id}",
-                                "/api/user/allUsers",
                                 "/api/auth/admin/revokeVerifyStore/{storeId}",
                                 "/api/auth/admin/verifyDeliveryPerson/{id}",
                                 "/api/auth/admin/revokeDeliveryPerson/{id}",
@@ -83,7 +82,8 @@ public class SecurityConfig {
 
                                 ).hasRole("USER")
                         .requestMatchers(
-                                "/api/bill/generate"
+                                "/api/bill/generate",
+                                "/api/auth/medical-store/register"
                         ).hasRole("MEDICALSTORE")
                         .anyRequest().authenticated()
                 )

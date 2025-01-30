@@ -62,7 +62,7 @@ public class AdminController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/delivery-persons")
+    @GetMapping("/delivery-person")
     public ResponseEntity<List<DeliveryPersonModel>> getAllDeliveryPersons() {
         try {
             List<DeliveryPersonModel> deliverypersons = adminService.getAllDeliveryPersons();
@@ -82,25 +82,7 @@ public class AdminController {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
         }
     }
-    @PostMapping("/uploadLicense/{storeId}")
-    public ResponseEntity<String> uploadLicense(@PathVariable int storeId, @RequestParam("file") MultipartFile file) {
-        try {
-            adminService.uploadLicense(storeId, file);
-            return new ResponseEntity<>("License uploaded successfully", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 
-    @PutMapping(path = "/revokeVerifyStore/{storeId}")
-    public ResponseEntity<?> revokeVerifyStore(@PathVariable int storeId){
-        try{
-            MedicalStoreModel verifiedStore = adminService.revokeVerifiedStore(storeId);
-            return new ResponseEntity<>(verifiedStore, HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
-        }
-    }
 
     @PutMapping(path = "/verifyDeliveryPerson/{id}")
     public ResponseEntity<?> verifyDeliveryPerson(@PathVariable int id){
@@ -116,6 +98,15 @@ public class AdminController {
         try{
             DeliveryPersonModel revokeDeliveryPerson = adminService.revokeDeliveryPerson(id);
             return new ResponseEntity<>(revokeDeliveryPerson, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+        }
+    }
+    @PutMapping(path = "/revokeStore/{id}")
+    public ResponseEntity<?> revokeStore(@PathVariable int id){
+        try{
+            MedicalStoreModel revokeStore = adminService.revokeVerifiedStore(id);
+            return new ResponseEntity<>(revokeStore, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
         }

@@ -25,7 +25,7 @@ public class FileUploadService {
                 .contentType("image/png")
                 .build();
         s3Client.putObject(putObjectRequest, RequestBody.fromBytes(fileContent));
-        return "https://"+bucketName+".s3."+s3Config.region+".amazon.com/"+keyName;
+        return "https://"+bucketName+".s3."+s3Config.region+".amazonaws.com/"+keyName;
     }
 
 }
