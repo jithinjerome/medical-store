@@ -44,7 +44,7 @@ public class MedicalStoreModel {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private VerificationStatus verificationStatus;
+    private VerificationStatus verificationStatus = VerificationStatus.NOT_VERIFIED;
 
     @Column(name = "latitude")
     private Double latitude;
