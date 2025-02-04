@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -35,37 +34,34 @@ public class SecurityConfig {
                                 "/api/user/forgot-password",
                                 "/api/user/verify",
                                 "/api/user/reset-password",
-                                "/api/auth/delivery-people/register",
-                                "/api/auth/delivery-people/login",
+                                "/api/auth/delivery-person/register",
+                                "/api/auth/delivery-person/login",
                                 "/api/auth/admin/login",
                                 "/api/auth/admin/users",
+                                "/api/auth/admin/medical-stores",
+                                "/api/auth/admin/delivery-persons",
                                 "/api/auth/medical-store/register",
                                 "/api/auth/medical-store/login",
-                                "/api/auth/admin/allStores",
-                                "/api/auth/admin/delivery-persons",
                                 "/api/auth/admin/verifyStore/{id}",
-                                "/api/auth/admin/revokeVerifyStore/{storeId}",
+                                "/api/auth/admin/revokeVerifyStore/{id}",
                                 "/api/auth/admin/verifyDeliveryPerson/{id}",
                                 "/api/auth/admin/revokeDeliveryPerson/{id}",
                                 "/api/auth/admin/removeStore/{id}",
                                 "/api/auth/admin/removeDeliveryPerson/{id}"
-
                         ).permitAll()
                         .requestMatchers(
-                                "/api/auth/admin/allStores",
-                                "/api/auth/delivery-people/allDeliveryPersons",
-                                "/api/auth/delivery-people/verifiedPersons",
-                                "/api/auth/delivery-people/notVerified",
-                                "/api/auth/medical-store/verifiedStores",
-                                "/api/auth/medical-store/notVerified",
-                                "/api/auth/admin/verifyStore/{id}",
+
                                 "/api/auth/admin/verify/{id}",
-                                "/api/user/allUsers",
+                                "/api/auth/admin/login",
+                                "/api/auth/admin/users",
+                                "/api/auth/admin/delivery-persons",
+                                "/api/auth/admin/medical-stores",
                                 "/api/auth/admin/revokeVerifyStore/{storeId}",
-                                "/api/auth/admin/verifyDeliveryPerson/{id}",
-                                "/api/auth/admin/revokeDeliveryPerson/{id}",
-                                "/api/auth/admin/removeStore/{id}",
-                                "/api/auth/admin/removeDeliveryPerson/{id}"
+                                "/api/auth/admin/verifyMedicalStore/{storeId}",
+                                "/api/auth/admin/verifyDeliveryPerson/{personId}",
+                                "/api/auth/admin/revokeDeliveryPerson/{personId}",
+                                "/api/auth/admin/removeStore/{storeId}",
+                                "/api/auth/admin/removeDeliveryPerson/{personId}"
                         ).hasRole("ADMIN")
                         .requestMatchers
                                 (

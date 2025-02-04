@@ -29,6 +29,19 @@ public class DeliveryPersonModel {
     @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
     private String contactNo;
 
+    @Column(name = "driving_license_image_url")
+    private String DrivingLicenseImageUrl;
+
+    @Column(name = "driving_license_image_name")
+    private String DrivingLicenseImageName;
+
+    @Column(name = "driving_license_image_size")
+    private Long DrivingLicenseImageSize;
+
+    @Column(name = "driving_license_image_type")
+    private String DrivingLicenseImageType;
+
+
     @Column(name = "password")
     @NotBlank(message = "Password is required")
     @Size(min = 8, message = "Password must be at least 8 characters long")
@@ -42,6 +55,40 @@ public class DeliveryPersonModel {
     private Role role;
 
     // Getters and setters
+
+
+    public String getDrivingLicenseImageUrl() {
+        return DrivingLicenseImageUrl;
+    }
+
+    public void setDrivingLicenseImageUrl(String drivingLicenseImageUrl) {
+        DrivingLicenseImageUrl = drivingLicenseImageUrl;
+    }
+
+    public String getDrivingLicenseImageName() {
+        return DrivingLicenseImageName;
+    }
+
+    public void setDrivingLicenseImageName(String drivingLicenseImageName) {
+        DrivingLicenseImageName = drivingLicenseImageName;
+    }
+
+    public Long getDrivingLicenseImageSize() {
+        return DrivingLicenseImageSize;
+    }
+
+    public void setDrivingLicenseImageSize(Long drivingLicenseImageSize) {
+        DrivingLicenseImageSize = drivingLicenseImageSize;
+    }
+
+    public String getDrivingLicenseImageType() {
+        return DrivingLicenseImageType;
+    }
+
+    public void setDrivingLicenseImageType(String drivingLicenseImageType) {
+        DrivingLicenseImageType = drivingLicenseImageType;
+    }
+
     public int getDeliveryPersonId() {
         return deliveryPersonId;
     }

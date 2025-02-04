@@ -53,10 +53,53 @@ public class MedicalStoreModel {
     private Double longitude;
 
     @Enumerated(EnumType.STRING)
-    private static Role role;
+    private Role role;
 
+    @Column(name = "store_license_image_url")
+    private String StoreLicenseImageUrl;
 
-    public static Role getRole() {
+    @Column(name = "store_license_image_name")
+    private String StoreLicenseImageName;
+
+    @Column(name = "store_license_image_size")
+    private Long StoreLicenseImageSize;
+
+    @Column(name = "store_license_image_type")
+    private String StoreLicenseImageType;
+
+    public String getStoreLicenseImageUrl() {
+        return StoreLicenseImageUrl;
+    }
+
+    public void setStoreLicenseImageUrl(String storeLicenseImageUrl) {
+        StoreLicenseImageUrl = storeLicenseImageUrl;
+    }
+
+    public String getStoreLicenseImageName() {
+        return StoreLicenseImageName;
+    }
+
+    public void setStoreLicenseImageName(String storeLicenseImageName) {
+        StoreLicenseImageName = storeLicenseImageName;
+    }
+
+    public Long getStoreLicenseImageSize() {
+        return StoreLicenseImageSize;
+    }
+
+    public void setStoreLicenseImageSize(Long storeLicenseImageSize) {
+        StoreLicenseImageSize = storeLicenseImageSize;
+    }
+
+    public String getStoreLicenseImageType() {
+        return StoreLicenseImageType;
+    }
+
+    public void setStoreLicenseImageType(String storeLicenseImageType) {
+        StoreLicenseImageType = storeLicenseImageType;
+    }
+
+    public  Role getRole() {
         return role;
     }
 

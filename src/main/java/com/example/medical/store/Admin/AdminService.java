@@ -8,24 +8,13 @@ import com.example.medical.store.MedicalStore.MedicalStoreModel;
 import com.example.medical.store.MedicalStore.MedicalStoreRepo;
 import com.example.medical.store.User.User;
 import com.example.medical.store.User.UserRepository;
-import com.example.medical.store.MedicalStore.MedicalStoreModel;
-import com.example.medical.store.MedicalStore.MedicalStoreRepo;
-import com.example.medical.store.User.VerificationStatus;
-import com.example.medical.store.MedicalStore.MedicalStoreModel;
-import com.example.medical.store.MedicalStore.MedicalStoreRepo;
-import com.example.medical.store.User.User;
-import com.example.medical.store.User.UserRepository;
 import com.example.medical.store.User.VerificationStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
-import java.util.List;
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,13 +39,7 @@ public class AdminService {
     private DeliveryPersonRepo deliveryPersonRepo;
 
     @Autowired
-    private UserRepository userRepo;
-
-    @Autowired
-    private MedicalStoreRepo medicalStoreRepo;
-
-    @Autowired
-    private DeliveryPersonRepo deliveryPersonRepo;
+    private JavaMailSender javaMailSender;
 
 
     public String adminLogin( String email, String password) {
@@ -74,39 +57,36 @@ public class AdminService {
 
     }
 
-    public List<User> getAllUsers() {
-        return userRepo.findAll();
+
+    private void sendVerificationEmail(String to, String name, String role) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(role + " Verification Approved");
+        message.setText("Dear " + name + ",\n\n"
+                + "Congratulations! Your " + role.toLowerCase() + " account has been verified and approved.\n"
+                + "You can now access all platform features.\n\n"
+                + "Thank you for using our service.\n\n"
+                + "Best Regards,\n"
+                + "Your Company Name");
+
+        javaMailSender.send(message);
     }
 
-    public List<MedicalStoreModel> getAllMedicalStores() {
-        return medicalStoreRepo.findAll();
-    }
 
-    public List<DeliveryPersonModel> getAllDeliveryPersons() {
-        return deliveryPersonRepo.findAll();
-    }
-
-    public DeliveryPersonModel verifiedPerson(int id){
-        Optional<DeliveryPersonModel> deliveryPerson = deliveryPersonRepo.findById(id);
-        if(deliveryPerson.isPresent()){
-            DeliveryPersonModel persons = deliveryPerson.get();
-            persons.setVerificationStatus(VerificationStatus.VERIFIED);
-            return deliveryPersonRepo.save(persons);
-        }else {
-            throw new IllegalArgumentException("No person found with this ID");
-        }
-    }
 
     public MedicalStoreModel verifiedStore(int id) {
         Optional<MedicalStoreModel> medicalStore = medicalStoreRepo.findById(id);
         if(medicalStore.isPresent()){
             MedicalStoreModel verifiedStore = medicalStore.get();
             verifiedStore.setVerificationStatus(VerificationStatus.VERIFIED);
+            //send verification email
+            sendVerificationEmail(verifiedStore.getEmail(), verifiedStore.getStoreName(), "Medical Store");
             return medicalStoreRepo.save(verifiedStore);
         }else{
             throw new IllegalArgumentException("No store found with this ID");
         }
     }
+
     public MedicalStoreModel revokeVerifiedStore(int id) {
         Optional<MedicalStoreModel> medicalStore = medicalStoreRepo.findById(id);
         if(medicalStore.isPresent()){
@@ -117,16 +97,21 @@ public class AdminService {
             throw new IllegalArgumentException("No store found with this ID");
         }
     }
+
     public DeliveryPersonModel verifyDeliveryPerson(int id) {
         Optional<DeliveryPersonModel> deliveryPerson = deliveryPersonRepo.findById(id);
         if(deliveryPerson.isPresent()){
             DeliveryPersonModel verifyDeliveryPerson = deliveryPerson.get();
             verifyDeliveryPerson.setVerificationStatus(VerificationStatus.VERIFIED);
+
+            // Send verification email
+            sendVerificationEmail(verifyDeliveryPerson.getEmail(), verifyDeliveryPerson.getName(), "Delivery Person");
             return deliveryPersonRepo.save(verifyDeliveryPerson);
         }else{
             throw new IllegalArgumentException("No store found with this ID");
         }
     }
+
     public DeliveryPersonModel revokeDeliveryPerson(int id) {
         Optional<DeliveryPersonModel> deliveryPerson = deliveryPersonRepo.findById(id);
         if(deliveryPerson.isPresent()){
@@ -149,7 +134,6 @@ public class AdminService {
     public List<DeliveryPersonModel> getAllDeliveryPersons() {
         return deliveryPersonRepo.findAll();
     }
-
 
     public void removeDeliveryPerson(int id) {
         if (deliveryPersonRepo.existsById(id)) {
