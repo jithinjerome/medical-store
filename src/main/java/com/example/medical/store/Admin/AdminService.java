@@ -41,7 +41,7 @@ public class AdminService {
             AdminModel admin = adminOptional.get();
 
             if(passwordEncoder.matches(password, admin.getPassword())){
-                return jwtUtil.generateToken(admin.getEmail(), admin.getRole().name());
+                return jwtUtil.generateToken(admin.getAdminId(),admin.getEmail(), admin.getRole().name());
             }else{
                 throw new IllegalArgumentException("Invalid Credentials: Password mismatch");
             }

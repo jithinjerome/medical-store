@@ -2,6 +2,8 @@ package com.example.medical.store.MedicalStore;
 
 import com.example.medical.store.Admin.AdminModel;
 import com.example.medical.store.JWT.JWTUtil;
+import com.example.medical.store.Prescription.PrescriptionRequest;
+import com.example.medical.store.Prescription.PrescriptionRequestRepository;
 import com.example.medical.store.User.Role;
 import com.example.medical.store.User.VerificationStatus;
 import jakarta.validation.Valid;
@@ -26,6 +28,9 @@ public class MedicalStoreService {
     @Autowired
     private JWTUtil jwtUtil;
 
+    @Autowired
+    private PrescriptionRequestRepository prescriptionRequestRepository;
+
     public MedicalStoreModel registerMedicalStore(@Valid MedicalStoreModel medicalStoreModel) {
         Optional<MedicalStoreModel> existingMedicalStore = medicalStoreRepo.findByEmail(medicalStoreModel.getEmail());
         if (existingMedicalStore.isPresent()) {
@@ -47,7 +52,7 @@ public class MedicalStoreService {
         if(medicalStoreOptional.isPresent()){
             MedicalStoreModel medicalStore = medicalStoreOptional.get();
             if(passwordEncoder.matches(password, medicalStore.getPassword())){
-                return jwtUtil.generateToken(medicalStore.getEmail(), medicalStore.getRole().name());
+                return jwtUtil.generateToken(medicalStore.getStoreId(),medicalStore.getEmail(), medicalStore.getRole().name());
             }
             throw new IllegalArgumentException("Invalid Credentials: Password Missmatch");
         }
@@ -75,5 +80,16 @@ public class MedicalStoreService {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(notVerifiedStores, HttpStatus.OK);
+    }
+
+
+    public ResponseEntity<List<PrescriptionRequest>> allPrescriptions(int storeId) {
+        Optional<MedicalStoreModel> medicalStoreModelOptional = medicalStoreRepo.findById(storeId);
+        if(medicalStoreModelOptional.isPresent()){
+            List<PrescriptionRequest> prescriptionRequestList = prescriptionRequestRepository.findByStoreId(storeId);
+            return new ResponseEntity<>(prescriptionRequestList,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
     }
 }

@@ -1,6 +1,7 @@
 package com.example.medical.store.MedicalStore;
 
 import com.example.medical.store.Admin.AdminModel;
+import com.example.medical.store.Prescription.PrescriptionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,5 +50,10 @@ public class MedicalStoreController {
     @GetMapping(path = "/notVerified")
     public ResponseEntity<List<MedicalStoreModel>> notVerifiedStores(){
         return medicalStoreService.notVerifiedStores();
+    }
+
+    @GetMapping(path = "/allPrescriptions/{storeId}")
+    public ResponseEntity<List<PrescriptionRequest>> allRequests(@PathVariable int storeId){
+        return medicalStoreService.allPrescriptions(storeId);
     }
 }

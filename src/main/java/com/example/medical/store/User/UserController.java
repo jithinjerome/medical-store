@@ -26,6 +26,11 @@ public class UserController {
         return userService.loginUser(email, password);
     }
 
+    @PutMapping(path = "/{id}/updateDetails")
+    public ResponseEntity<?> updateDetails(@PathVariable long id, @RequestBody User user){
+        return userService.updateDetails(id,user);
+    }
+
     @GetMapping("/user-location")
     public ResponseEntity<List<MedicalStoreModel>> findNearByStores(@RequestParam double latitude, @RequestParam double longitude){
         List<MedicalStoreModel> nearByStores =  userService.findNearByStores(latitude,longitude,5.0);
