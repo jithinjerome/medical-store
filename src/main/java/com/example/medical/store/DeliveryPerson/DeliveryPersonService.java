@@ -91,7 +91,7 @@ public class DeliveryPersonService {
         if(deliveryPersonOptional.isPresent()){
             DeliveryPersonModel deliveryPerson = deliveryPersonOptional.get();
             if(passwordEncoder.matches(password, deliveryPerson.getPassword())){
-                return jwtUtil.generateToken(deliveryPerson.getEmail(),deliveryPerson.getRole().name());
+                return jwtUtil.generateToken(deliveryPerson.getDeliveryPersonId(),deliveryPerson.getEmail(),deliveryPerson.getRole().name());
 
             }else {
                 throw new IllegalArgumentException("Invalid credentials: Password mismatch");

@@ -1,5 +1,6 @@
 package com.example.medical.store.User;
 
+import com.example.medical.store.JWT.AuthResponse;
 import com.example.medical.store.JWT.JWTUtil;
 import com.example.medical.store.MedicalStore.MedicalStoreModel;
 import com.example.medical.store.MedicalStore.MedicalStoreRepo;
@@ -62,8 +63,9 @@ public class UserService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (passwordEncoder.matches(password, user.getPassword())) {
-                String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
-                return ResponseEntity.ok().body(token);
+                String accessToken = jwtUtil.generateToken(user.getId(),user.getEmail(), user.getRole().name());
+                String refreshToken = jwtUtil.generateRefreshToken(user.getEmail());
+                return ResponseEntity.ok(new AuthResponse(accessToken,refreshToken));
             } else {
                 return ResponseEntity.badRequest().body("Invalid credentials: Password mismatch");
             }
@@ -169,5 +171,27 @@ public class UserService {
         if(user.getOtpExpiration().isBefore(LocalDateTime.now())){
             throw new IllegalArgumentException("OTP expired");
         }
+    }
+
+    public ResponseEntity<?> updateDetails(long id,User user) {
+        Optional<User> userOptional = userRepository.findById(id);
+
+        if(userOptional.isPresent()){
+
+            Optional<User> existingEmail = userRepository.findByEmail(user.getEmail());
+            if(existingEmail.isPresent() && existingEmail.get().getId() != id){
+                return new ResponseEntity<>("Email is already in use by another user",HttpStatus.BAD_REQUEST);
+            }
+
+            User updatedUser = userOptional.get();
+            updatedUser.setName(user.getName());
+            updatedUser.setEmail(user.getEmail());
+            updatedUser.setAddress(user.getAddress());
+            updatedUser.setPhone(user.getPhone());
+
+            userRepository.save(updatedUser);
+            return new ResponseEntity<>(updatedUser,HttpStatus.OK);
+        }
+        throw new RuntimeException("User not found with ID "+id);
     }
 }

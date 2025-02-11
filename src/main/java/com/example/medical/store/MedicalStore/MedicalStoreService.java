@@ -31,6 +31,16 @@ public class MedicalStoreService {
     private JWTUtil jwtUtil;
 
     @Autowired
+    private PrescriptionRequestRepository prescriptionRequestRepository;
+
+    public MedicalStoreModel registerMedicalStore(@Valid MedicalStoreModel medicalStoreModel) {
+        Optional<MedicalStoreModel> existingMedicalStore = medicalStoreRepo.findByEmail(medicalStoreModel.getEmail());
+        if (existingMedicalStore.isPresent()) {
+            throw new IllegalArgumentException("Medical store with this email already exists");
+        }
+        if (medicalStoreModel.getVerificationStatus() == null) {
+            medicalStoreModel.setVerificationStatus(VerificationStatus.NOT_VERIFIED);
+    @Autowired
     private FileUploadService fileUploadService;
 
 
@@ -88,16 +98,12 @@ public class MedicalStoreService {
         return medicalStoreRepo.save(medicalStoreModel);
     }
 
-
-
-
-
     public String medicalStoreLogin( String email, String password) {
         Optional<MedicalStoreModel> medicalStoreOptional = medicalStoreRepo.findByEmail(email);
         if(medicalStoreOptional.isPresent()){
             MedicalStoreModel medicalStore = medicalStoreOptional.get();
             if(passwordEncoder.matches(password, medicalStore.getPassword())){
-                return jwtUtil.generateToken(medicalStore.getEmail(), medicalStore.getRole().name());
+                return jwtUtil.generateToken(medicalStore.getStoreId(),medicalStore.getEmail(), medicalStore.getRole().name());
             }
             throw new IllegalArgumentException("Invalid Credentials: Password Missmatch");
         }
@@ -128,5 +134,13 @@ public class MedicalStoreService {
     }
 
 
+    public ResponseEntity<List<PrescriptionRequest>> allPrescriptions(int storeId) {
+        Optional<MedicalStoreModel> medicalStoreModelOptional = medicalStoreRepo.findById(storeId);
+        if(medicalStoreModelOptional.isPresent()){
+            List<PrescriptionRequest> prescriptionRequestList = prescriptionRequestRepository.findByStoreId(storeId);
+            return new ResponseEntity<>(prescriptionRequestList,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
+    }
 }

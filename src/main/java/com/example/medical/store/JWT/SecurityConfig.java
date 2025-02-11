@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/api/auth/refreshToken",
                                 "/api/user/register",
                                 "/api/user/login",
                                 "/api/user/forgot-password",
@@ -67,12 +68,13 @@ public class SecurityConfig {
                         .requestMatchers
                                 (
                                         "/api/user/{id}",
+                                        "/api/user/{id}/updateDetails",
                                         "/api/request/send",
                                         "/api/bill/{userId}"
-
                                 ).hasRole("USER")
                         .requestMatchers(
-                                "/api/bill/generate"
+                                "/api/bill/generate",
+                                "/api/auth/medicalstore/allPrescriptions/{storeId}"
                         ).hasRole("MEDICALSTORE")
                         .anyRequest().authenticated()
                 )

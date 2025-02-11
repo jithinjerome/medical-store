@@ -1,5 +1,7 @@
 package com.example.medical.store.MedicalStore;
 
+import com.example.medical.store.Admin.AdminModel;
+import com.example.medical.store.Prescription.PrescriptionRequest;
 
 import com.example.medical.store.DeliveryPerson.DeliveryPersonModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-@CrossOrigin
+
 @RestController
 @RequestMapping(path = "/api/auth/medical-store")
 public class MedicalStoreController {
@@ -39,8 +41,6 @@ public ResponseEntity<?> medicalStoreRegister(@RequestPart("medicalStoreModel") 
         }
     }
 
-
-
     @GetMapping(path = "/allStores")
     public ResponseEntity<List<MedicalStoreModel>> allStores(){
         return medicalStoreService.allStores();
@@ -54,5 +54,10 @@ public ResponseEntity<?> medicalStoreRegister(@RequestPart("medicalStoreModel") 
     @GetMapping(path = "/notVerified")
     public ResponseEntity<List<MedicalStoreModel>> notVerifiedStores(){
         return medicalStoreService.notVerifiedStores();
+    }
+
+    @GetMapping(path = "/allPrescriptions/{storeId}")
+    public ResponseEntity<List<PrescriptionRequest>> allRequests(@PathVariable int storeId){
+        return medicalStoreService.allPrescriptions(storeId);
     }
 }
