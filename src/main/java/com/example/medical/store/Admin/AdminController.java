@@ -5,6 +5,8 @@ import com.example.medical.store.DeliveryPerson.DeliveryPersonModel;
 import com.example.medical.store.MedicalStore.MedicalStoreModel;
 import com.example.medical.store.MedicalStore.MedicalStoreService;
 import com.example.medical.store.User.User;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +26,6 @@ public class AdminController {
     @Autowired
     private MedicalStoreService medicalStoreService;
 
-
-
-
     @PostMapping("/login")
     public ResponseEntity<String> adminLogin(@RequestBody AdminModel loginRequest) {
         try {
@@ -36,8 +35,6 @@ public class AdminController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
-
-
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
         try {
@@ -47,7 +44,6 @@ public class AdminController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @GetMapping("/medical-stores")
     public ResponseEntity<List<MedicalStoreModel>> getAllMedicalStores() {
         try {
@@ -67,61 +63,59 @@ public class AdminController {
         }
     }
 
-
-    @PutMapping(path = "/verifyMedicalStore/{storeId}")
-    public ResponseEntity<?> verifyMedicalStore(@PathVariable int storeId){
+    @PutMapping(path = "/verifyMedicalStore/{id}")
+    public ResponseEntity<?> verifyMedicalStore(@PathVariable int id){
         try{
-            MedicalStoreModel verifiedStore = adminService.verifiedStore(storeId);
+            MedicalStoreModel verifyStore = adminService.verifiedStore(id);
+            return new ResponseEntity<>(verifyStore, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping(path = "/revokeMedicalStore/{id}")
+    public ResponseEntity<?> revokeVerifyStore(@PathVariable int id){
+        try{
+            MedicalStoreModel verifiedStore = adminService.revokeVerifiedStore(id);
             return new ResponseEntity<>(verifiedStore, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping(path = "/revokeVerifyStore/{storeId}")
-    public ResponseEntity<?> revokeVerifyStore(@PathVariable int storeId){
+    @PutMapping(path = "/verifyDeliveryPerson/{id}")
+    public ResponseEntity<?> verifyDeliveryPerson(@PathVariable int id){
         try{
-            MedicalStoreModel verifiedStore = adminService.revokeVerifiedStore(storeId);
-            return new ResponseEntity<>(verifiedStore, HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PutMapping(path = "/verifyDeliveryPerson/{personId}")
-    public ResponseEntity<?> verifyDeliveryPerson(@PathVariable int personId){
-        try{
-            DeliveryPersonModel verifyDeliveryPerson = adminService.verifyDeliveryPerson(personId);
+            DeliveryPersonModel verifyDeliveryPerson = adminService.verifyDeliveryPerson(id);
             return new ResponseEntity<>(verifyDeliveryPerson, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping(path = "/revokeDeliveryPerson/{personId}")
-    public ResponseEntity<?> revokeDeliveryPerson(@PathVariable int personId){
+    @PutMapping(path = "/revokeDeliveryPerson/{id}")
+    public ResponseEntity<?> revokeDeliveryPerson(@PathVariable int id){
         try{
-            DeliveryPersonModel revokeDeliveryPerson = adminService.revokeDeliveryPerson(personId);
+            DeliveryPersonModel revokeDeliveryPerson = adminService.revokeDeliveryPerson(id);
             return new ResponseEntity<>(revokeDeliveryPerson, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
         }
     }
 
-    @DeleteMapping(path = "/removeDeliveryPerson/{personId}")
-    public ResponseEntity<?> removeDeliveryPerson(@PathVariable int personId) {
+    @DeleteMapping(path = "/removeDeliveryPerson/{id}")
+    public ResponseEntity<?> removeDeliveryPerson(@PathVariable int id) {
         try {
-            adminService.removeDeliveryPerson(personId);
+            adminService.removeDeliveryPerson(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT); // No response body
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
-
-    @DeleteMapping(path = "/removeStore/{storeId}")
-    public ResponseEntity<?> removeStore(@PathVariable int storeId) {
+    @DeleteMapping(path = "/removeStore/{id}")
+    public ResponseEntity<?> removeStore(@PathVariable int id) {
         try {
-            adminService.removeStore(storeId);
+            adminService.removeStore(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT); // No response body
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

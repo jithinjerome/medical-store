@@ -1,6 +1,4 @@
 package com.example.medical.store.Admin;
-
-
 import com.example.medical.store.DeliveryPerson.DeliveryPersonModel;
 import com.example.medical.store.DeliveryPerson.DeliveryPersonRepo;
 import com.example.medical.store.JWT.JWTUtil;
@@ -9,11 +7,22 @@ import com.example.medical.store.MedicalStore.MedicalStoreRepo;
 import com.example.medical.store.User.User;
 import com.example.medical.store.User.UserRepository;
 import com.example.medical.store.User.VerificationStatus;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +50,31 @@ public class AdminService {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    @Autowired
+    private TemplateEngine templateEngine;
+
+    private static final Logger logger = LoggerFactory.getLogger(AdminService.class);
+
+
+    public void sendVerificationEmail(String email, String storeName, String role) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(email);
+            message.setSubject(role + " Verification Completed");
+            message.setText("Dear " + storeName + ",\n" +
+                    "Congratulations! Your account has been verified and approved.\n" +
+                    "You can now access all platform features.\n" +
+                    "\n" +
+                    "Thank you for using our service.\n" +
+                    "\n" +
+                    "Best Regards,\n" +
+                    "E-pharma");
+            javaMailSender.send(message);
+            logger.info("Verification email sent successfully to {}", email);
+        }catch (MailException e){
+            logger.error("Failed to sent verification email to {}",email + e.getMessage());
+        }
+    }
 
     public String adminLogin( String email, String password) {
         Optional<AdminModel> adminOptional = adminRepo.findByEmail(email);
@@ -57,35 +91,19 @@ public class AdminService {
 
     }
 
-
-    private void sendVerificationEmail(String to, String name, String role) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(to);
-        message.setSubject(role + " Verification Approved");
-        message.setText("Dear " + name + ",\n\n"
-                + "Congratulations! Your " + role.toLowerCase() + " account has been verified and approved.\n"
-                + "You can now access all platform features.\n\n"
-                + "Thank you for using our service.\n\n"
-                + "Best Regards,\n"
-                + "Your Company Name");
-
-        javaMailSender.send(message);
-    }
-
-
-
     public MedicalStoreModel verifiedStore(int id) {
         Optional<MedicalStoreModel> medicalStore = medicalStoreRepo.findById(id);
         if(medicalStore.isPresent()){
             MedicalStoreModel verifiedStore = medicalStore.get();
             verifiedStore.setVerificationStatus(VerificationStatus.VERIFIED);
-            //send verification email
             sendVerificationEmail(verifiedStore.getEmail(), verifiedStore.getStoreName(), "Medical Store");
-            return medicalStoreRepo.save(verifiedStore);
+            medicalStoreRepo.save(verifiedStore);
+            return verifiedStore;
         }else{
             throw new IllegalArgumentException("No store found with this ID");
         }
     }
+
 
     public MedicalStoreModel revokeVerifiedStore(int id) {
         Optional<MedicalStoreModel> medicalStore = medicalStoreRepo.findById(id);
@@ -105,7 +123,7 @@ public class AdminService {
             verifyDeliveryPerson.setVerificationStatus(VerificationStatus.VERIFIED);
 
             // Send verification email
-            sendVerificationEmail(verifyDeliveryPerson.getEmail(), verifyDeliveryPerson.getName(), "Delivery Person");
+            sendVerificationEmail(verifyDeliveryPerson.getEmail(), verifyDeliveryPerson.getName(), "Delivery Partner");
             return deliveryPersonRepo.save(verifyDeliveryPerson);
         }else{
             throw new IllegalArgumentException("No store found with this ID");
