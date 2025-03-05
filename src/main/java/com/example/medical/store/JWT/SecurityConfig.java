@@ -74,7 +74,9 @@ public class SecurityConfig {
                                 ).hasRole("USER")
                         .requestMatchers(
                                 "/api/bill/generate",
-                                "/api/auth/medicalstore/allPrescriptions/{storeId}"
+                                "/api/auth/medicalstore/allPrescriptions/{storeId}",
+                                "/api/auth/medical-store/register",
+                                "/api/auth/medical-store/login"
                         ).hasRole("MEDICALSTORE")
                         .anyRequest().authenticated()
                 )
