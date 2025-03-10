@@ -69,7 +69,7 @@ public class CustomerUserDetailsService implements UserDetailsService {
         if(medicalStoreOptional.isPresent()){
             MedicalStoreModel medicalStore = medicalStoreOptional.get();
             return org.springframework.security.core.userdetails.User
-                    .withUsername(medicalStore.getStoreName())
+                    .withUsername(medicalStore.getEmail())
                     .password(medicalStore.getPassword())
                     .authorities("ROLE_" + medicalStore.getRole().name())
                     .build();

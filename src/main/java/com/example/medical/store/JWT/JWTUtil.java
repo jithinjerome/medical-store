@@ -16,7 +16,7 @@ public class JWTUtil {
     private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private static final Key REFRESH_SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    private static final long EXPIRATION_TIME = 1000*60*1; //1   minutes
+    private static final long EXPIRATION_TIME = 1000*60*60; //1   Hour
     private static final long REFRESH_EXPIRATION_TIME = 1000*60*60*24; //24 hours
 
     public String extractUsername(String token) {

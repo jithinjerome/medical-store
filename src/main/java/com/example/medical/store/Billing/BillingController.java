@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -19,6 +20,7 @@ public class BillingController {
     private BillingService billingService;
 
     @PostMapping(path = "/generate")
+    @PreAuthorize("hasRole('ROLE_MEDICALSTORE') and #prescriptionId >0 and #storeId >0")
     public ResponseEntity<?> generateBill(@RequestParam long prescriptionId,
                                           @RequestParam long storeId,
                                           @RequestBody List<Map<String, BigDecimal>> medicines){

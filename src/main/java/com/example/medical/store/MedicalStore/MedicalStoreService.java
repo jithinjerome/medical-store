@@ -7,6 +7,7 @@ import com.example.medical.store.Prescription.PrescriptionRequestRepository;
 import com.example.medical.store.User.Role;
 import com.example.medical.store.User.VerificationStatus;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class MedicalStoreService {
 
@@ -51,6 +53,7 @@ public class MedicalStoreService {
         Optional<MedicalStoreModel> medicalStoreOptional = medicalStoreRepo.findByEmail(email);
         if(medicalStoreOptional.isPresent()){
             MedicalStoreModel medicalStore = medicalStoreOptional.get();
+            log.info("Medical store Login : "+medicalStore.getRole());
             if(passwordEncoder.matches(password, medicalStore.getPassword())){
                 return jwtUtil.generateToken(medicalStore.getStoreId(),medicalStore.getEmail(), medicalStore.getRole().name());
             }
