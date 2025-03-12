@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 
 @Configuration
-@EnableMethodSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
     private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
     private final JWTAuthenticationFilter jwtAuthenticationFilter;
@@ -69,9 +69,10 @@ public class SecurityConfig {
                                         "/api/auth/medicalstore/verifiedStores"
                                 ).hasAnyRole("ADMIN","USER")
                         .requestMatchers(
-                                "/api/bill/generate",
+                                //"/api/bill/generate",
                                 "/api/auth/medicalstore/allPrescriptions/{storeId}"
-                        ).hasAuthority("ROLE_MEDICALSTORE")
+                        ).hasRole("MEDICALSTORE")
+                        .requestMatchers("/api/bill/generate").hasAuthority("ROLE_MEDICALSTORE")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

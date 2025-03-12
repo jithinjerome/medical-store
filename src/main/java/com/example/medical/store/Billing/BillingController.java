@@ -20,7 +20,7 @@ public class BillingController {
     private BillingService billingService;
 
     @PostMapping(path = "/generate")
-    @PreAuthorize("hasRole('ROLE_MEDICALSTORE') and #prescriptionId >0 and #storeId >0")
+    @PreAuthorize("hasRole('MEDICAL_STORE')")
     public ResponseEntity<?> generateBill(@RequestParam long prescriptionId,
                                           @RequestParam long storeId,
                                           @RequestBody List<Map<String, BigDecimal>> medicines){
