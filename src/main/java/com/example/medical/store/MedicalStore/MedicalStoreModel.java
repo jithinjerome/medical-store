@@ -4,38 +4,43 @@ import com.example.medical.store.User.Role;
 import com.example.medical.store.User.VerificationStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class MedicalStoreModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int storeId;
 
-    @Column(name = "medical_store_name", nullable = false)
+    @Column(name = "medical_store_name")
     @NotBlank(message = "Store name is required")
     private String storeName;
-    @Column(name = "storeownername", nullable = false)
+
+    @Column(name = "storeownername")
     @NotBlank(message = "Store Owner name is required")
     private String storeOwnerName;
 
-
-    @Column(name = "address", nullable = false)
+    @Column(name = "address")
     @NotBlank(message = "Store address is required")
     private String storeAddress;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(name = "license_no")
+    private String licenseNo;
+
+    @Column(name = "phone_number")
     @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
     private String contactNo;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", unique = true)
     @Email(message = "Invalid email address")
     private String email;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     @NotBlank(message = "Password is required")
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
@@ -52,90 +57,16 @@ public class MedicalStoreModel {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public Role getRole() {
-        return role;
-    }
+    @Column(name = "store_license_image_url")
+    private String StoreLicenseImageUrl;
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
+    @Column(name = "store_license_image_name")
+    private String StoreLicenseImageName;
 
-    public VerificationStatus getVerificationStatus() {
-        return verificationStatus;
-    }
+    @Column(name = "store_license_image_size")
+    private Long StoreLicenseImageSize;
 
-    public void setVerificationStatus(VerificationStatus verificationStatus) {
-        this.verificationStatus = verificationStatus;
-    }
+    @Column(name = "store_license_image_type")
+    private String StoreLicenseImageType;
 
-    public int getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(int storeId) {
-        this.storeId = storeId;
-    }
-
-    public @NotBlank(message = "Store name is required") String getStoreName() {
-        return storeName;
-    }
-
-    public void setStoreName(@NotBlank(message = "Store name is required") String storeName) {
-        this.storeName = storeName;
-    }
-    public @NotBlank(message = "Store Owner name is required") String getStoreOwnerName() {
-        return storeOwnerName;
-    }
-
-    public void setStoreOwnerName(@NotBlank(message = "Store Owner name is required") String storeOwnerName) {
-        this.storeOwnerName = storeOwnerName;
-    }
-
-    public @NotBlank(message = "Store address is required") String getStoreAddress() {
-        return storeAddress;
-    }
-
-    public void setStoreAddress(@NotBlank(message = "Store address is required") String storeAddress) {
-        this.storeAddress = storeAddress;
-    }
-
-    public @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits") String getContactNo() {
-        return contactNo;
-    }
-
-    public void setContactNo(@Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits") String contactNo) {
-        this.contactNo = contactNo;
-    }
-
-    public @Email(message = "Invalid email address") String getEmail() {
-        return email;
-    }
-
-    public void setEmail(@Email(message = "Invalid email address") String email) {
-        this.email = email;
-    }
-
-    public @NotBlank(message = "Password is required") @Size(min = 8, message = "Password must be at least 8 characters long") String getPassword() {
-        return password;
-    }
-
-    public void setPassword(@NotBlank(message = "Password is required") @Size(min = 8, message = "Password must be at least 8 characters long") String password) {
-        this.password = password;
-    }
-
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
 }

@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -41,13 +40,24 @@ public class SecurityConfig {
                                 "/api/user/forgot-password",
                                 "/api/user/verify",
                                 "/api/user/reset-password",
-                                "/api/auth/delivery-people/register",
-                                "/api/auth/delivery-people/login",
+                                "/api/auth/delivery-person/register",
+                                "/api/auth/delivery-person/login",
                                 "/api/auth/admin/login",
-                                "/api/auth/medicalstore/register",
-                                "/api/auth/medicalstore/login"
+                                "/api/auth/admin/users",
+                                "/api/auth/admin/medical-stores",
+                                "/api/auth/admin/delivery-persons",
+                                "/api/auth/medical-store/register",
+                                "/api/auth/medical-store/login",
+                                "/api/auth/admin/verifyMedicalStore/{id}",
+                                "/api/auth/admin/revokeMedicalStore/{id}",
+                                "/api/auth/admin/verifyDeliveryPerson/{id}",
+                                "/api/auth/admin/revokeDeliveryPerson/{id}",
+                                "/api/auth/admin/removeStore/{id}",
+                                "/api/auth/admin/removeDeliveryPerson/{id}",
+                                "/api/auth/admin/sendVerificationEmail"
                         ).permitAll()
                         .requestMatchers(
+
                                 "/api/auth/medicalstore/allStores",
                                 "/api/auth/delivery-people/allDeliveryPersons",
                                 "/api/auth/delivery-people/verifiedPersons",
@@ -55,7 +65,17 @@ public class SecurityConfig {
                                 "/api/auth/medicalstore/notVerified",
                                 "/api/auth/admin/verifyStore/{id}",
                                 "/api/auth/admin/verify/{id}",
-                                "/api/user/allUsers"
+                                "/api/auth/admin/login",
+                                "/api/auth/admin/users",
+                                "/api/auth/admin/delivery-persons",
+                                "/api/auth/admin/medical-stores",
+                                "/api/auth/admin/verifyMedicalStore/{id}",
+                                "/api/auth/admin/revokeMedicalStore/{id}",
+                                "/api/auth/admin/verifyDeliveryPerson/{id}",
+                                "/api/auth/admin/revokeDeliveryPerson/{id}",
+                                "/api/auth/admin/removeStore/{id}",
+                                "/api/auth/admin/removeDeliveryPerson/{id}",
+                                "/api/auth/admin/sendVerificationEmail"
                         ).hasRole("ADMIN")
                         .requestMatchers(
                                         "/api/user/{id}",
@@ -69,8 +89,14 @@ public class SecurityConfig {
                                         "/api/auth/medicalstore/verifiedStores"
                                 ).hasAnyRole("ADMIN","USER")
                         .requestMatchers(
+
                                 //"/api/bill/generate",
                                 "/api/auth/medicalstore/allPrescriptions/{storeId}"
+                                "/api/bill/generate",
+                                "/api/auth/medicalstore/allPrescriptions/{storeId}",
+                                "/api/auth/medical-store/register",
+                                "/api/auth/medical-store/login"
+
                         ).hasRole("MEDICALSTORE")
                         .requestMatchers("/api/bill/generate").hasAuthority("ROLE_MEDICALSTORE")
                         .anyRequest().authenticated()
