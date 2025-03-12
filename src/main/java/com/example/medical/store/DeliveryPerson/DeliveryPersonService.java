@@ -31,9 +31,9 @@ public class DeliveryPersonService {
 
     @Autowired
     private JWTUtil jwtUtil;
+
     @Autowired
     private FileUploadService fileUploadService;
-
 
     @Transactional
     public DeliveryPersonModel registerDeliveryPerson(DeliveryPersonModel deliveryPersonModel, MultipartFile drivingLicenseImage) throws IOException {
@@ -84,16 +84,15 @@ public class DeliveryPersonService {
         return deliveryPersonRepo.save(deliveryPersonModel);
     }
 
-
-    public String deliveryPersonLogin(@Email(message = "Invalid email address") @NotBlank(message = "Email is required") String email, @NotBlank(message = "Password is required") @Size(min = 8, message = "Password must be at least 8 characters long") String password) {
+    public String deliveryPersonLogin(@Email(message = "Invalid email address") @NotBlank(message = "Email is required") String email,
+                                      @NotBlank(message = "Password is required") @Size(min = 8, message = "Password must be at least 8 characters long") String password) {
         Optional<DeliveryPersonModel> deliveryPersonOptional = deliveryPersonRepo.findByEmail(email);
 
-        if(deliveryPersonOptional.isPresent()){
+        if (deliveryPersonOptional.isPresent()) {
             DeliveryPersonModel deliveryPerson = deliveryPersonOptional.get();
-            if(passwordEncoder.matches(password, deliveryPerson.getPassword())){
-                return jwtUtil.generateToken(deliveryPerson.getEmail(),deliveryPerson.getRole().name());
-
-            }else {
+            if (passwordEncoder.matches(password, deliveryPerson.getPassword())) {
+                return jwtUtil.generateToken(deliveryPerson.getDeliveryPersonId(), deliveryPerson.getEmail(), deliveryPerson.getRole().name());
+            } else {
                 throw new IllegalArgumentException("Invalid credentials: Password mismatch");
             }
         }
@@ -108,7 +107,7 @@ public class DeliveryPersonService {
     public ResponseEntity<List<DeliveryPersonModel>> verifiedPersons() {
         List<DeliveryPersonModel> verifiedPersons = deliveryPersonRepo.findByVerificationStatus(VerificationStatus.VERIFIED);
 
-        if(verifiedPersons.isEmpty()){
+        if (verifiedPersons.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(verifiedPersons, HttpStatus.OK);
@@ -117,7 +116,7 @@ public class DeliveryPersonService {
     public ResponseEntity<List<DeliveryPersonModel>> notVerifiedPerson() {
         List<DeliveryPersonModel> notVerified = deliveryPersonRepo.findByVerificationStatus(VerificationStatus.NOT_VERIFIED);
 
-        if(notVerified.isEmpty()){
+        if (notVerified.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(notVerified, HttpStatus.OK);

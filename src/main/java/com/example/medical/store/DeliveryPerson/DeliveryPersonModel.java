@@ -20,7 +20,7 @@ public class DeliveryPersonModel {
     @NotBlank(message = "Name is required")
     private String name;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     @Email(message = "Invalid email address")
     @NotBlank(message = "Email is required")
     private String email;
@@ -41,7 +41,6 @@ public class DeliveryPersonModel {
     @Column(name = "driving_license_image_type")
     private String DrivingLicenseImageType;
 
-
     @Column(name = "password")
     @NotBlank(message = "Password is required")
     @Size(min = 8, message = "Password must be at least 8 characters long")
@@ -55,39 +54,6 @@ public class DeliveryPersonModel {
     private Role role;
 
     // Getters and setters
-
-
-    public String getDrivingLicenseImageUrl() {
-        return DrivingLicenseImageUrl;
-    }
-
-    public void setDrivingLicenseImageUrl(String drivingLicenseImageUrl) {
-        DrivingLicenseImageUrl = drivingLicenseImageUrl;
-    }
-
-    public String getDrivingLicenseImageType() {
-        return DrivingLicenseImageType;
-    }
-
-    public void setDrivingLicenseImageType(String drivingLicenseImageType) {
-        DrivingLicenseImageType = drivingLicenseImageType;
-    }
-
-    public Long getDrivingLicenseImageSize() {
-        return DrivingLicenseImageSize;
-    }
-
-    public void setDrivingLicenseImageSize(Long drivingLicenseImageSize) {
-        DrivingLicenseImageSize = drivingLicenseImageSize;
-    }
-
-    public String getDrivingLicenseImageName() {
-        return DrivingLicenseImageName;
-    }
-
-    public void setDrivingLicenseImageName(String drivingLicenseImageName) {
-        DrivingLicenseImageName = drivingLicenseImageName;
-    }
 
     public int getDeliveryPersonId() {
         return deliveryPersonId;
@@ -119,6 +85,38 @@ public class DeliveryPersonModel {
 
     public void setContactNo(String contactNo) {
         this.contactNo = contactNo;
+    }
+
+    public String getDrivingLicenseImageUrl() {
+        return DrivingLicenseImageUrl;
+    }
+
+    public void setDrivingLicenseImageUrl(String drivingLicenseImageUrl) {
+        DrivingLicenseImageUrl = drivingLicenseImageUrl;
+    }
+
+    public String getDrivingLicenseImageName() {
+        return DrivingLicenseImageName;
+    }
+
+    public void setDrivingLicenseImageName(String drivingLicenseImageName) {
+        DrivingLicenseImageName = drivingLicenseImageName;
+    }
+
+    public Long getDrivingLicenseImageSize() {
+        return DrivingLicenseImageSize;
+    }
+
+    public void setDrivingLicenseImageSize(Long drivingLicenseImageSize) {
+        DrivingLicenseImageSize = drivingLicenseImageSize;
+    }
+
+    public String getDrivingLicenseImageType() {
+        return DrivingLicenseImageType;
+    }
+
+    public void setDrivingLicenseImageType(String drivingLicenseImageType) {
+        DrivingLicenseImageType = drivingLicenseImageType;
     }
 
     public String getPassword() {

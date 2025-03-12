@@ -6,32 +6,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/auth/delivery-person")
+@RequestMapping(path = "/api/auth/delivery-people")
 public class DeliveryPersonController {
 
     @Autowired
     private DeliveryPersonService deliveryPersonService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> deliveryPersonRegister(
-            @RequestPart("deliveryPersonModel") DeliveryPersonModel deliveryPersonModel,
-            @RequestPart("drivingLicenseImage") MultipartFile drivingLicenseImage) {
+    public ResponseEntity<?> deliveryPersonRegister(@RequestPart("deliveryPersonModel") DeliveryPersonModel deliveryPersonModel,
+                                                    @RequestPart("drivingLicenseImage") MultipartFile drivingLicenseImage) {
         try {
             DeliveryPersonModel registeredDeliveryPerson = deliveryPersonService.registerDeliveryPerson(deliveryPersonModel, drivingLicenseImage);
             return new ResponseEntity<>(registeredDeliveryPerson, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | IOException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (IOException e) {
             return new ResponseEntity<>("File upload failed. Please try again.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @PostMapping("/login")
     public ResponseEntity<String> deliveryPersonLogin(@RequestBody DeliveryPersonModel loginRequest) {
         try {

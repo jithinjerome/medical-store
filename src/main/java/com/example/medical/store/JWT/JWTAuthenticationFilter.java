@@ -41,12 +41,18 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = customerUserDetailsService.loadUserByUsername(username);
+                System.out.println("User Authorities: " + userDetails.getAuthorities());
                 String role = jwtUtil.extractClaim(token, claims -> claims.get("role", String.class));
+//                if (role.startsWith("ROLE_")) {
+//                    role = role.substring(5); // Extract "MEDICALSTORE" from "ROLE_MEDICALSTORE"
+//                }
+       //         System.out.println("Extracted Role from JWT: " + role);
 
                 if(jwtUtil.validateToken(token,username)){
 
                     var authToken = new UsernamePasswordAuthenticationToken(userDetails,null,List.of(new SimpleGrantedAuthority(role)));
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    System.out.println("Auth Token Granted Authorities: " + authToken.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }

@@ -7,7 +7,11 @@ import com.example.medical.store.Prescription.Prescription;
 import com.example.medical.store.Prescription.PrescriptionRepository;
 import com.example.medical.store.Prescription.PrescriptionRequest;
 import com.example.medical.store.Prescription.PrescriptionRequestRepository;
+import com.example.medical.store.User.User;
+import com.example.medical.store.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -32,6 +36,9 @@ public class BillingService {
     @Autowired
     private MedicalStoreRepo medicalStoreRepo;
 
+    @Autowired
+    private UserRepository userRepository;
+
 
     private static final BigDecimal GST = new BigDecimal("0.18");
     private static final BigDecimal DELIVERY_CHARGE = new BigDecimal("50");
@@ -40,6 +47,10 @@ public class BillingService {
     public Billing generateBill(long prescriptionId,long storeId, List<Map<String, BigDecimal>> medicines) {
 
         Optional<Prescription> prescriptionOptional = prescriptionRepository.findById(prescriptionId);
+
+        if (medicines == null || medicines.isEmpty()) {
+            throw new IllegalArgumentException("Medicine list cannot be empty");
+        }
 
         if(prescriptionOptional.isEmpty()){
             throw new RuntimeException("Prescription not found");
@@ -89,5 +100,14 @@ public class BillingService {
 
         return billingRepository.save(billing);
 
+    }
+
+    public List billingByUser(long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if(userOptional.isEmpty()){
+            return new ArrayList<>();
+        }
+        User user = userOptional.get();
+        return billingRepository.findByUserId(userId);
     }
 }

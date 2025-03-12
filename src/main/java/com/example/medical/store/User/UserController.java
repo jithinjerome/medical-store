@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
-
 @RestController
 @RequestMapping(path = "/api/user")
 public class UserController {
@@ -24,6 +22,11 @@ public class UserController {
     @PostMapping(path = "/login")
     public ResponseEntity<?> loginUser(@RequestParam String email, @RequestParam String password){
         return userService.loginUser(email, password);
+    }
+
+    @PutMapping(path = "/{id}/updateDetails")
+    public ResponseEntity<?> updateDetails(@PathVariable long id, @RequestBody User user){
+        return userService.updateDetails(id,user);
     }
 
     @GetMapping("/user-location")
