@@ -4,11 +4,12 @@ import com.example.medical.store.User.Role;
 import com.example.medical.store.User.VerificationStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class MedicalStoreModel {
 
     @Id

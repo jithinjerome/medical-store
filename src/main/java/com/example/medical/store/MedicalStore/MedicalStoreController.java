@@ -2,6 +2,11 @@ package com.example.medical.store.MedicalStore;
 
 import com.example.medical.store.AWS.FileUploadService;
 import com.example.medical.store.Admin.AdminModel;
+import com.example.medical.store.Prescription.PrescriptionRequest;
+import com.example.medical.store.Prescription.PrescriptionRequestService;
+import com.example.medical.store.StoreEmployee.StoreEmployee;
+import com.example.medical.store.StoreEmployee.StoreEmployeeDTO;
+import com.example.medical.store.StoreEmployee.StoreEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +23,12 @@ public class MedicalStoreController {
     @Autowired
     private MedicalStoreService medicalStoreService;
 
+    @Autowired
+    private StoreEmployeeService storeEmployeeService;
+
+    @Autowired
+    private PrescriptionRequestService prescriptionRequestService;
+
 
 
     @PostMapping("/register")
@@ -25,7 +36,7 @@ public class MedicalStoreController {
                                                   @RequestPart("licenseImage") MultipartFile licenseImage)  {
         try{
             MedicalStoreModel registeredMedicalStore = medicalStoreService.registerMedicalStore(medicalStoreModel,licenseImage);
-            return new ResponseEntity<>(registeredMedicalStore, HttpStatus.CREATED);
+            return new ResponseEntity<>(medicalStoreService.convertToDTO(registeredMedicalStore), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
@@ -42,18 +53,41 @@ public class MedicalStoreController {
         }
     }
 
-    @GetMapping(path = "/allStores")
-    public ResponseEntity<List<MedicalStoreModel>> allStores(){
-        return medicalStoreService.allStores();
+    @PostMapping(path ="/addEmployee")
+    public ResponseEntity<?> addEmployee(@RequestBody StoreEmployeeDTO storeEmployeeDTO){
+        try {
+            StoreEmployeeDTO addedEmployee = storeEmployeeService.addEmployee(storeEmployeeDTO);
+            return new ResponseEntity<>(addedEmployee, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
     }
+    @PostMapping(path ="/updateEmployee/{id}")
+    public ResponseEntity<String> updateEmployee(){
+        try {
 
-    @GetMapping(path = "/verifiedStores")
-    public ResponseEntity<List<MedicalStoreModel>> verifiedStores(){
-        return medicalStoreService.verifiedStores();
+
+        }catch (Exception e){
+
+        }
     }
-
-    @GetMapping(path = "/notVerified")
-    public ResponseEntity<List<MedicalStoreModel>> notVerifiedStores(){
-        return medicalStoreService.notVerifiedStores();
+    @DeleteMapping(path ="/removeEmployee/{id}")
+    public ResponseEntity<String> removeEmployee(@PathVariable Long id){
+        try{
+            storeEmployeeService.removeEmployee(id);
+            return new ResponseEntity<>("Employee Deleted",HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Employee not Found",HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping(path ="/allPrescriptions")
+    public ResponseEntity<List<PrescriptionRequest>> allPrescriptionRequests(){
+        List<PrescriptionRequest> prescriptions = prescriptionRequestService.getAllPrescriptions();
+        return new ResponseEntity<>(prescriptions,HttpStatus.OK);
+    }
+    @GetMapping(path ="/allEmployees")
+    public ResponseEntity<List<StoreEmployeeDTO>> allEmployees(){
+        List<StoreEmployeeDTO> storeEmployees = storeEmployeeService.getAllEmployees();
+        return new ResponseEntity<>(storeEmployees,HttpStatus.OK);
     }
 }

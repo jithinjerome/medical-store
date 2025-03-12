@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -41,7 +42,8 @@ public class SecurityConfig {
                                 "/api/auth/admin/users",
                                 "/api/auth/medical-store/login",
                                 "/api/auth/medical-store/register",
-                                "/api/auth/medical-store/allStores",
+                                "/api/auth/medical-store/allPrescriptions",
+                                "/api/auth/medical-store/allEmployees",
                                 "/api/auth/admin/allStores",
                                 "/api/auth/admin/delivery-person",
                                 "/api/auth/admin/verifyStore/{id}",
@@ -57,8 +59,6 @@ public class SecurityConfig {
                                 "/api/auth/delivery-people/allDeliveryPersons",
                                 "/api/auth/delivery-people/verifiedPersons",
                                 "/api/auth/delivery-people/notVerified",
-                                "/api/auth/medicalstore/verifiedStores",
-                                "/api/auth/medicalstore/notVerified",
                                 "/api/auth/admin/verifyStore/{id}",
                                 "/api/auth/admin/verify/{id}",
                                 "/api/user/allUsers",
@@ -83,7 +83,9 @@ public class SecurityConfig {
                                 ).hasRole("USER")
                         .requestMatchers(
                                 "/api/bill/generate",
-                                "/api/auth/medical-store/register"
+                                "/api/auth/medical-store/register",
+                                "/api/auth/medical-store/allPrescriptions",
+                                "/api/auth/medical-store/allEmployees"
                         ).hasRole("MEDICALSTORE")
                         .anyRequest().authenticated()
                 )

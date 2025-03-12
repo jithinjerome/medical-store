@@ -1,21 +1,18 @@
 package com.example.medical.store.MedicalStore;
 
 import com.example.medical.store.AWS.FileUploadService;
-import com.example.medical.store.Admin.AdminModel;
 import com.example.medical.store.JWT.JWTUtil;
+import com.example.medical.store.StoreEmployee.StoreEmployeeRepository;
 import com.example.medical.store.User.Role;
 import com.example.medical.store.User.VerificationStatus;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,6 +29,9 @@ public class MedicalStoreService {
     private JWTUtil jwtUtil;
     @Autowired
     private FileUploadService fileUploadService;
+
+    @Autowired
+    private StoreEmployeeRepository storeEmployeeRepository;
 
 
     @Transactional
@@ -93,31 +93,28 @@ public class MedicalStoreService {
             if(passwordEncoder.matches(password, medicalStore.getPassword())){
                 return jwtUtil.generateToken(medicalStore.getEmail(), medicalStore.getRole().name());
             }
-            throw new IllegalArgumentException("Invalid Credentials: Password Missmatch");
+            throw new IllegalArgumentException("Invalid Credentials: Password Mismatch");
         }
         throw new IllegalArgumentException("Invalid Credentials: User not found");
     }
 
-    public ResponseEntity<List<MedicalStoreModel>> allStores() {
-        List<MedicalStoreModel> stores = medicalStoreRepo.findAll();
-        return new ResponseEntity<>(stores, HttpStatus.OK);
+    public MedicalStoreDTO convertToDTO(MedicalStoreModel medicalStoreModel) {
+        return new MedicalStoreDTO(
+                medicalStoreModel.getStoreId(),
+                medicalStoreModel.getStoreName(),
+                medicalStoreModel.getStoreOwnerName(),
+                medicalStoreModel.getStoreAddress(),
+                medicalStoreModel.getLicenseNo(),
+                medicalStoreModel.getContactNo(),
+                medicalStoreModel.getEmail(),
+                medicalStoreModel.getVerificationStatus(),
+                medicalStoreModel.getLatitude(),
+                medicalStoreModel.getLongitude(),
+                medicalStoreModel.getLicenseImageUrl(),
+                medicalStoreModel.getRole()
+        );
     }
 
-    public ResponseEntity<List<MedicalStoreModel>> verifiedStores() {
-        List<MedicalStoreModel> verifiedStores = medicalStoreRepo.findByVerificationStatus(VerificationStatus.VERIFIED);
 
-        if(verifiedStores.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(verifiedStores, HttpStatus.OK);
-    }
 
-    public ResponseEntity<List<MedicalStoreModel>> notVerifiedStores() {
-        List<MedicalStoreModel> notVerifiedStores = medicalStoreRepo.findByVerificationStatus(VerificationStatus.NOT_VERIFIED);
-
-        if(notVerifiedStores.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(notVerifiedStores, HttpStatus.OK);
-    }
 }
