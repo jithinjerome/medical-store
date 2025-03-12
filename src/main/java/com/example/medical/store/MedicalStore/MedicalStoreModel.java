@@ -9,6 +9,9 @@ import lombok.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Getter
+@Setter
 public class MedicalStoreModel {
 
     @Id
@@ -20,7 +23,7 @@ public class MedicalStoreModel {
     private String storeName;
 
     @Column(nullable = false)
-    @NotBlank(message = "Store Owner name is required")
+    @NotBlank(message = "Store owner name is required")
     private String storeOwnerName;
 
     @Column(nullable = false)
@@ -46,12 +49,12 @@ public class MedicalStoreModel {
 
     private Double latitude;
     private Double longitude;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private String storeLicenseImageUrl;
-    private String storeLicenseImageName;
-    private Long storeLicenseImageSize;
-    private String storeLicenseImageType;
-
+    private String licenseImageUrl;
+    private String licenseImageName;
+    private Long licenseImageSize;
+    private String licenseImageType;
 }

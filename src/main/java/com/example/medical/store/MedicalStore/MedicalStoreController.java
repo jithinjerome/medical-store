@@ -20,26 +20,29 @@ public class MedicalStoreController {
     private MedicalStoreService medicalStoreService;
 
     @Autowired
+    private MedicalStoreDTO medicalStoreDTO;
+
+    @Autowired
     private StoreEmployeeService storeEmployeeService;
 
     @Autowired
     private PrescriptionRequestService prescriptionRequestService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> medicalStoreRegister(@RequestPart("medicalStoreModel") MedicalStoreModel medicalStoreModel,
+    public ResponseEntity<?> medicalStoreRegister(@RequestPart("medicalStoreModel") MedicalStoreDTO medicalStoreDTO,
                                                   @RequestPart("storeLicenseImage") MultipartFile storeLicenseImage) {
         try {
-            MedicalStoreModel registeredMedicalStore = medicalStoreService.registerMedicalStore(medicalStoreModel, storeLicenseImage);
-            return new ResponseEntity<>(medicalStoreService.convertToDTO(registeredMedicalStore), HttpStatus.CREATED);
+            MedicalStoreDTO registeredMedicalStore = medicalStoreService.registerMedicalStore(medicalStoreDTO, storeLicenseImage);
+            return new ResponseEntity<>(registeredMedicalStore, HttpStatus.CREATED);
         } catch (IllegalArgumentException | IOException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> medicalStoreLogin(@RequestBody MedicalStoreModel medicalStoreModel) {
+    public ResponseEntity<?> medicalStoreLogin(@RequestBody MedicalStoreDTO medicalStoreDTO) {
         try {
-            String loginResponse = medicalStoreService.medicalStoreLogin(medicalStoreModel.getEmail(), medicalStoreModel.getPassword());
+            String loginResponse = medicalStoreService.medicalStoreLogin(medicalStoreDTO.getEmail(), medicalStoreDTO.getPassword());
             return new ResponseEntity<>(loginResponse, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
@@ -56,15 +59,15 @@ public class MedicalStoreController {
         }
     }
 
-    @PutMapping("/updateEmployee/{id}")
-    public ResponseEntity<?> updateEmployee(@PathVariable Long id, @RequestBody StoreEmployeeDTO storeEmployeeDTO) {
-        try {
-            StoreEmployeeDTO updatedEmployee = storeEmployeeService.updateEmployee(id, storeEmployeeDTO);
-            return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @PutMapping("/updateEmployee/{id}")
+//    public ResponseEntity<?> updateEmployee(@PathVariable Long id, @RequestBody StoreEmployeeDTO storeEmployeeDTO) {
+//        try {
+//            StoreEmployeeDTO updatedEmployee = storeEmployeeService.updateEmployee(id, storeEmployeeDTO);
+//            return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
     @DeleteMapping("/removeEmployee/{id}")
     public ResponseEntity<String> removeEmployee(@PathVariable Long id) {
@@ -88,8 +91,4 @@ public class MedicalStoreController {
         return new ResponseEntity<>(storeEmployees, HttpStatus.OK);
     }
 
-    @GetMapping("/allPrescriptions/{storeId}")
-    public ResponseEntity<List<PrescriptionRequest>> allRequests(@PathVariable int storeId) {
-        return medicalStoreService.allPrescriptions(storeId);
-    }
 }

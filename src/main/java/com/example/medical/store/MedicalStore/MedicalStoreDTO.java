@@ -3,10 +3,12 @@ package com.example.medical.store.MedicalStore;
 import com.example.medical.store.User.Role;
 import com.example.medical.store.User.VerificationStatus;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class MedicalStoreDTO {
@@ -17,6 +19,7 @@ public class MedicalStoreDTO {
     private String licenseNo;
     private String contactNo;
     private String email;
+    private String password;
     private VerificationStatus verificationStatus;
     private Double latitude;
     private Double longitude;
