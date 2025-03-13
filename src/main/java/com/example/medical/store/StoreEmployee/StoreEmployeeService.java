@@ -19,22 +19,20 @@ public class StoreEmployeeService {
                 .collect(Collectors.toList());
     }
     public StoreEmployeeDTO convertToDTO(StoreEmployee storeEmployee){
-        return new StoreEmployeeDTO(
-                storeEmployee.getEmployeeId(),
-                storeEmployee.getEmployeeName(),
-                storeEmployee.getEmployeeAddress(),
-                storeEmployee.getEmployeeContactNo()
-        );
+        StoreEmployeeDTO dto = new StoreEmployeeDTO();
+        dto.setEmployeeId(storeEmployee.getEmployeeId());
+        dto.setEmployeeName(storeEmployee.getEmployeeName());
+        dto.setEmployeeAddress(storeEmployee.getEmployeeAddress());
+        dto.setEmployeeContactNo(storeEmployee.getEmployeeContactNo());
+        return dto;
     }
-
-    public StoreEmployeeDTO addEmployee(StoreEmployeeDTO storeEmployeeDTO) {
-        StoreEmployeeDTO newEmployee = new StoreEmployeeDTO();
-        newEmployee.setEmployeeName(storeEmployeeDTO.getEmployeeName());
-        newEmployee.setEmployeeContactNo(storeEmployeeDTO.getEmployeeContactNo());
-        newEmployee.setEmployeeAddress(storeEmployeeDTO.getEmployeeAddress());
-
-        newEmployee = storeEmployeeRepository.save(newEmployee);
-
+    public StoreEmployee addEmployee(StoreEmployeeDTO storeEmployeeDTO) {
+        StoreEmployee model = new StoreEmployee();
+        model.setEmployeeName(storeEmployeeDTO.getEmployeeName());
+        model.setEmployeeContactNo(storeEmployeeDTO.getEmployeeContactNo());
+        model.setEmployeeAddress(storeEmployeeDTO.getEmployeeAddress());
+        model.setRole(storeEmployeeDTO.getRole());
+        return storeEmployeeRepository.save(model);
     }
     public void removeEmployee(Long id) {
         if(storeEmployeeRepository.existsById(id)){

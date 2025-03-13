@@ -1,13 +1,10 @@
 package com.example.medical.store.StoreEmployee;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.medical.store.User.Role;
+import jakarta.persistence.*;
 import lombok.*;
 
-@Setter
-@Getter
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,4 +20,46 @@ public class StoreEmployee {
 
     private String employeeContactNo;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    public Long getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
+
+    public String getEmployeeAddress() {
+        return employeeAddress;
+    }
+
+    public void setEmployeeAddress(String employeeAddress) {
+        this.employeeAddress = employeeAddress;
+    }
+
+    public String getEmployeeContactNo() {
+        return employeeContactNo;
+    }
+
+    public void setEmployeeContactNo(String employeeContactNo) {
+        this.employeeContactNo = employeeContactNo;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }

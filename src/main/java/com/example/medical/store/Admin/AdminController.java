@@ -22,7 +22,7 @@ public class AdminController {
     private MedicalStoreService medicalStoreService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> adminLogin(@RequestBody AdminModel loginRequest) {
+    public ResponseEntity<?> adminLogin(@RequestBody AdminModel loginRequest) {
         try {
             String loginResponse = adminService.adminLogin(loginRequest.getEmail(), loginRequest.getPassword());
             return new ResponseEntity<>(loginResponse, HttpStatus.OK);
@@ -64,7 +64,7 @@ public class AdminController {
     @PutMapping("/verifyMedicalStore/{id}")
     public ResponseEntity<?> verifyMedicalStore(@PathVariable int id) {
         try {
-            MedicalStoreModel verifyStore = adminService.verifiedStore(id);
+            MedicalStoreModel verifyStore = adminService.verifyStore(id);
             return new ResponseEntity<>(verifyStore, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -74,7 +74,7 @@ public class AdminController {
     @PutMapping("/revokeMedicalStore/{id}")
     public ResponseEntity<?> revokeVerifyStore(@PathVariable int id) {
         try {
-            MedicalStoreModel verifiedStore = adminService.revokeVerifiedStore(id);
+            MedicalStoreModel verifiedStore = adminService.revokeStoreVerification(id);
             return new ResponseEntity<>(verifiedStore, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

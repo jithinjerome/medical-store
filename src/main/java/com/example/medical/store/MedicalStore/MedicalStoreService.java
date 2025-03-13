@@ -9,8 +9,8 @@ import com.example.medical.store.User.Role;
 import com.example.medical.store.User.VerificationStatus;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,15 +22,20 @@ import java.util.UUID;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class MedicalStoreService {
 
-    private final MedicalStoreRepo medicalStoreRepo;
-    private final PasswordEncoder passwordEncoder;
-    private final JWTUtil jwtUtil;
-    private final FileUploadService fileUploadService;
-    private final StoreEmployeeRepository storeEmployeeRepository;
-    private final PrescriptionRequestRepository prescriptionRequestRepository;
+    @Autowired
+    private  MedicalStoreRepo medicalStoreRepo;
+    @Autowired
+    private  PasswordEncoder passwordEncoder;
+    @Autowired
+    private  JWTUtil jwtUtil;
+    @Autowired
+    private  FileUploadService fileUploadService;
+    @Autowired
+    private  StoreEmployeeRepository storeEmployeeRepository;
+    @Autowired
+    private  PrescriptionRequestRepository prescriptionRequestRepository;
 
     @Transactional
     public MedicalStoreDTO registerMedicalStore(MedicalStoreDTO medicalStoreDTO, @Valid MultipartFile licenseImage) throws IOException {
@@ -50,7 +55,6 @@ public class MedicalStoreService {
 
         // Save the medical store entity
          MedicalStoreModel savedMedicalStore = medicalStoreRepo.save(medicalStoreModel);
-        log.info("Medical store registered successfully: ID {}", savedMedicalStore.getStoreId());
 
        return convertToDTO(savedMedicalStore);
     }
@@ -64,33 +68,42 @@ public class MedicalStoreService {
         return "Login successful!";
     }
     public MedicalStoreDTO convertToDTO(MedicalStoreModel model) {
-        return MedicalStoreDTO.builder()
-                .storeId(model.getStoreId())
-                .storeName(model.getStoreName())
-                .storeOwnerName(model.getStoreOwnerName())
-                .storeAddress(model.getStoreAddress())
-                .licenseNo(model.getLicenseNo())
-                .contactNo(model.getContactNo())
-                .email(model.getEmail())
-                .licenseImageUrl(model.getLicenseImageUrl()) // Standardized field name
-                .verificationStatus(model.getVerificationStatus())
-                .latitude(model.getLatitude())
-                .longitude(model.getLongitude())
-                .role(model.getRole())
-                .build();
+        MedicalStoreDTO dto = new MedicalStoreDTO();
+        dto.setStoreId(model.getStoreId());
+        dto.setStoreName(model.getStoreName());
+        dto.setStoreOwnerName(model.getStoreOwnerName());
+        dto.setStoreAddress(model.getStoreAddress());
+        dto.setLicenseNo(model.getLicenseNo());
+        dto.setContactNo(model.getContactNo());
+        dto.setEmail(model.getEmail());
+        dto.setStoreLicenseImageUrl(model.getStoreLicenseImageUrl()); // Standardized field name
+        dto.setVerificationStatus(model.getVerificationStatus());
+        dto.setLatitude(model.getLatitude());
+        dto.setLongitude(model.getLongitude());
+        dto.setRole(model.getRole());
+        return dto;
     }
+
     public MedicalStoreModel convertToModel(MedicalStoreDTO dto) {
-        return MedicalStoreModel.builder()
-                .storeName(dto.getStoreName())
-                .storeOwnerName(dto.getStoreOwnerName())
-                .storeAddress(dto.getStoreAddress())
-                .licenseNo(dto.getLicenseNo())
-                .contactNo(dto.getContactNo())
-                .email(dto.getEmail())
-                .verificationStatus(VerificationStatus.NOT_VERIFIED)
-                .role(Role.MEDICALSTORE)
-                .build();
+        MedicalStoreModel model = new MedicalStoreModel();
+        model.setStoreName(dto.getStoreName());
+        model.setStoreOwnerName(dto.getStoreOwnerName());
+        model.setStoreAddress(dto.getStoreAddress());
+        model.setLicenseNo(dto.getLicenseNo());
+        model.setContactNo(dto.getContactNo());
+        model.setEmail(dto.getEmail());
+        // Ensure password is securely handled
+        if (dto.getPassword() != null) {
+            model.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
+        model.setStoreLicenseImageUrl(dto.getStoreLicenseImageUrl());
+        model.setVerificationStatus(VerificationStatus.NOT_VERIFIED);
+        model.setLatitude(dto.getLatitude());
+        model.setLongitude(dto.getLongitude());
+        model.setRole(Role.MEDICALSTORE);
+        return model;
     }
+
     private void validateAndUploadFile(MedicalStoreModel model, MultipartFile file) throws IOException {
 
         if (file.getContentType() == null || !file.getContentType().startsWith("image/")) {
@@ -111,17 +124,15 @@ public class MedicalStoreService {
             String fileUrl = fileUploadService.uploadFile("medicalstore", fileKey, file.getBytes());
 
             if (fileUrl == null || fileUrl.isEmpty()) {
-                log.error("File upload failed for file: {}", originalFilename);
                 throw new MedicalStoreException("Failed to upload store license image. Please try again.", HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
 
-            model.setLicenseImageUrl(fileUrl);
-            model.setLicenseImageName(originalFilename);
-            model.setLicenseImageSize(file.getSize());
-            model.setLicenseImageType(file.getContentType());
+            model.setStoreLicenseImageUrl(fileUrl);
+            model.setStoreLicenseImageName(originalFilename);
+            model.setStoreLicenseImageSize(file.getSize());
+            model.setStoreLicenseImageType(file.getContentType());
         } catch (Exception e) {
-            log.error("Unexpected error occurred during file upload: {}", e.getMessage(), e);
             throw new MedicalStoreException("An unexpected error occurred while uploading the file. Please try again.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

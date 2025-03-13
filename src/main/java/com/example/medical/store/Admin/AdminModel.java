@@ -8,8 +8,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-@Setter
-@Getter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,4 +31,36 @@ public class AdminModel {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+
+    public int getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(int adminId) {
+        this.adminId = adminId;
+    }
+
+    public @Email(message = "Invalid email address") @NotBlank(message = "Email is required") String getEmail() {
+        return email;
+    }
+
+    public void setEmail(@Email(message = "Invalid email address") @NotBlank(message = "Email is required") String email) {
+        this.email = email;
+    }
+
+    public @NotBlank(message = "Password is required") @Size(min = 8, message = "Password must be at least 8 characters long") String getPassword() {
+        return password;
+    }
+
+    public void setPassword(@NotBlank(message = "Password is required") @Size(min = 8, message = "Password must be at least 8 characters long") String password) {
+        this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }

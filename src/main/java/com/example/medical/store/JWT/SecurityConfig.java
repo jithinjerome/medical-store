@@ -44,7 +44,8 @@ public class SecurityConfig {
                                 "/api/auth/delivery-person/login",
                                 "/api/auth/admin/login",
                                 "/api/auth/medical-store/register",
-                                "/api/auth/medical-store/login"
+                                "/api/auth/medical-store/login",
+                                "/api/auth/medical-store/allEmployees"
                         ).permitAll()
 
                         // Admin-only endpoints

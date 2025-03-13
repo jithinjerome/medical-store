@@ -2,6 +2,7 @@ package com.example.medical.store.MedicalStore;
 
 import com.example.medical.store.Prescription.PrescriptionRequest;
 import com.example.medical.store.Prescription.PrescriptionRequestService;
+import com.example.medical.store.StoreEmployee.StoreEmployee;
 import com.example.medical.store.StoreEmployee.StoreEmployeeDTO;
 import com.example.medical.store.StoreEmployee.StoreEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class MedicalStoreController {
     @Autowired
     private MedicalStoreService medicalStoreService;
 
-    @Autowired
+
     private MedicalStoreDTO medicalStoreDTO;
 
     @Autowired
@@ -52,7 +53,7 @@ public class MedicalStoreController {
     @PostMapping("/addEmployee")
     public ResponseEntity<?> addEmployee(@RequestBody StoreEmployeeDTO storeEmployeeDTO) {
         try {
-            StoreEmployeeDTO addedEmployee = storeEmployeeService.addEmployee(storeEmployeeDTO);
+            StoreEmployee addedEmployee = storeEmployeeService.addEmployee(storeEmployeeDTO);
             return new ResponseEntity<>(addedEmployee, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
