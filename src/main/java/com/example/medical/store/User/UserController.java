@@ -7,15 +7,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin
 @RestController
 @RequestMapping(path = "/api/user")
-
 public class UserController {
 
     @Autowired
     private UserService userService;
-
 
     @PostMapping(path = "/register")
     public ResponseEntity<?> registerUser(@RequestBody User user){

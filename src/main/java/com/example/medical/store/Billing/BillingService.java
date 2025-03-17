@@ -48,6 +48,10 @@ public class BillingService {
 
         Optional<Prescription> prescriptionOptional = prescriptionRepository.findById(prescriptionId);
 
+        if (medicines == null || medicines.isEmpty()) {
+            throw new IllegalArgumentException("Medicine list cannot be empty");
+        }
+
         if(prescriptionOptional.isEmpty()){
             throw new RuntimeException("Prescription not found");
         }

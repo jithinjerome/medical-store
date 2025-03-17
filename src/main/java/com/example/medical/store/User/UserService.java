@@ -75,7 +75,7 @@ public class UserService {
 
 
     public List<MedicalStoreModel> findNearByStores(double latitude, double longitude, double radiusInKm) {
-        List<MedicalStoreModel> allStores = medicalStoreRepo.findAll();
+        List<MedicalStoreModel> allStores = medicalStoreRepo.findByVerificationStatus(VerificationStatus.VERIFIED);
         List<MedicalStoreModel> nearByStores = new ArrayList<>();
 
         for(MedicalStoreModel store: allStores){

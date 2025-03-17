@@ -6,9 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor
@@ -30,16 +28,9 @@ public class AdminModel {
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
     @Enumerated(EnumType.STRING)
     private Role role;
+
 
     public int getAdminId() {
         return adminId;
@@ -49,19 +40,27 @@ public class AdminModel {
         this.adminId = adminId;
     }
 
-    public String getEmail() {
+    public @Email(message = "Invalid email address") @NotBlank(message = "Email is required") String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(@Email(message = "Invalid email address") @NotBlank(message = "Email is required") String email) {
         this.email = email;
     }
 
-    public String getPassword() {
+    public @NotBlank(message = "Password is required") @Size(min = 8, message = "Password must be at least 8 characters long") String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(@NotBlank(message = "Password is required") @Size(min = 8, message = "Password must be at least 8 characters long") String password) {
         this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

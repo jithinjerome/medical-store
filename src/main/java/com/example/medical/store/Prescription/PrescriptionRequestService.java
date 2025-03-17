@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -43,5 +44,9 @@ public class PrescriptionRequestService {
 
         }
         return new ResponseEntity<>("Prescription not found", HttpStatus.NOT_FOUND);
+    }
+
+    public List<PrescriptionRequest> getAllPrescriptions() {
+        return prescriptionRequestRepository.findAll();
     }
 }

@@ -10,9 +10,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-@CrossOrigin
+
 @RestController
-@RequestMapping(path = "/api/auth/delivery-person")
+@RequestMapping(path = "/api/auth/delivery-people")
 public class DeliveryPersonController {
 
     @Autowired
@@ -22,10 +22,12 @@ public class DeliveryPersonController {
     public ResponseEntity<?> deliveryPersonRegister(@RequestPart("deliveryPersonModel") DeliveryPersonModel deliveryPersonModel,
                                                     @RequestPart("drivingLicenseImage") MultipartFile drivingLicenseImage) {
         try {
-            DeliveryPersonModel registeredDeliveryPerson = deliveryPersonService.registerDeliveryPerson(deliveryPersonModel,drivingLicenseImage);
+            DeliveryPersonModel registeredDeliveryPerson = deliveryPersonService.registerDeliveryPerson(deliveryPersonModel, drivingLicenseImage);
             return new ResponseEntity<>(registeredDeliveryPerson, HttpStatus.CREATED);
-        } catch (IllegalArgumentException | IOException e) {
+        } catch (IllegalArgumentException  e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch ( IOException e) {
+            return new ResponseEntity<>("File upload failed. Please try again.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @PostMapping("/login")
