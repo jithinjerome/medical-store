@@ -60,15 +60,15 @@ public class MedicalStoreController {
         }
     }
 
-//    @PutMapping("/updateEmployee/{id}")
-//    public ResponseEntity<?> updateEmployee(@PathVariable Long id, @RequestBody StoreEmployeeDTO storeEmployeeDTO) {
-//        try {
-//            StoreEmployeeDTO updatedEmployee = storeEmployeeService.updateEmployee(id, storeEmployeeDTO);
-//            return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-//        }
-//    }
+    @PutMapping("/updateEmployee/{id}")
+    public ResponseEntity<?> updateEmployee(@PathVariable Long id, @RequestBody StoreEmployeeDTO storeEmployeeDTO) {
+        try {
+            StoreEmployeeDTO updatedEmployee = storeEmployeeService.updateEmployee(id, storeEmployeeDTO);
+            return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @DeleteMapping("/removeEmployee/{id}")
     public ResponseEntity<String> removeEmployee(@PathVariable Long id) {

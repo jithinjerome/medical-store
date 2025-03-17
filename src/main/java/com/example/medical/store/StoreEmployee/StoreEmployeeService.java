@@ -18,6 +18,7 @@ public class StoreEmployeeService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+
     public StoreEmployeeDTO convertToDTO(StoreEmployee storeEmployee){
         StoreEmployeeDTO dto = new StoreEmployeeDTO();
         dto.setEmployeeId(storeEmployee.getEmployeeId());
@@ -26,6 +27,7 @@ public class StoreEmployeeService {
         dto.setEmployeeContactNo(storeEmployee.getEmployeeContactNo());
         return dto;
     }
+
     public StoreEmployee addEmployee(StoreEmployeeDTO storeEmployeeDTO) {
         StoreEmployee model = new StoreEmployee();
         model.setEmployeeName(storeEmployeeDTO.getEmployeeName());
@@ -34,6 +36,7 @@ public class StoreEmployeeService {
         model.setRole(storeEmployeeDTO.getRole());
         return storeEmployeeRepository.save(model);
     }
+
     public void removeEmployee(Long id) {
         if(storeEmployeeRepository.existsById(id)){
             storeEmployeeRepository.deleteById(id);
@@ -41,4 +44,29 @@ public class StoreEmployeeService {
             throw new IllegalArgumentException("No Employee found with this ID");
         }
     }
+
+    public StoreEmployeeDTO updateEmployee(Long id, StoreEmployeeDTO storeEmployeeDTO) {
+        StoreEmployee existingEmployee = storeEmployeeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No Employee found with this ID"));
+
+        // Update employee fields
+        if (storeEmployeeDTO.getEmployeeName() != null) {
+            existingEmployee.setEmployeeName(storeEmployeeDTO.getEmployeeName());
+        }
+        if (storeEmployeeDTO.getEmployeeAddress() != null) {
+            existingEmployee.setEmployeeAddress(storeEmployeeDTO.getEmployeeAddress());
+        }
+        if (storeEmployeeDTO.getEmployeeContactNo() != null) {
+            existingEmployee.setEmployeeContactNo(storeEmployeeDTO.getEmployeeContactNo());
+        }
+        if (storeEmployeeDTO.getRole() != null) {
+            existingEmployee.setRole(storeEmployeeDTO.getRole());
+        }
+
+        // Save the updated employee to the database
+        StoreEmployee updatedEmployee = storeEmployeeRepository.save(existingEmployee);
+
+        return convertToDTO(updatedEmployee);
+    }
+
 }
