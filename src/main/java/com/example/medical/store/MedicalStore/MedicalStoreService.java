@@ -3,6 +3,7 @@ package com.example.medical.store.MedicalStore;
 import com.example.medical.store.AWS.FileUploadService;
 import com.example.medical.store.Exceptions.MedicalStoreException;
 import com.example.medical.store.JWT.JWTUtil;
+import com.example.medical.store.Prescription.PrescriptionRequest;
 import com.example.medical.store.Prescription.PrescriptionRequestRepository;
 import com.example.medical.store.StoreEmployee.StoreEmployeeRepository;
 import com.example.medical.store.User.Role;
@@ -12,11 +13,13 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -67,6 +70,17 @@ public class MedicalStoreService {
         }
         return "Login successful!";
     }
+
+    public ResponseEntity<List<PrescriptionRequest>> allPrescriptions(int storeId) {
+        Optional<MedicalStoreModel> medicalStoreModelOptional = medicalStoreRepo.findById(storeId);
+        if(medicalStoreModelOptional.isPresent()){
+            List<PrescriptionRequest> prescriptionRequestList = prescriptionRequestRepository.findByStoreId(storeId);
+            return new ResponseEntity<>(prescriptionRequestList,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+    }
+
     public MedicalStoreDTO convertToDTO(MedicalStoreModel model) {
         MedicalStoreDTO dto = new MedicalStoreDTO();
         dto.setStoreId(model.getStoreId());

@@ -50,6 +50,11 @@ public class MedicalStoreController {
         }
     }
 
+    @GetMapping(path = "/allPrescriptions/{storeId}")
+    public ResponseEntity<List<PrescriptionRequest>> allRequests(@PathVariable int storeId){
+        return medicalStoreService.allPrescriptions(storeId);
+    }
+
     @PostMapping("/addEmployee")
     public ResponseEntity<?> addEmployee(@RequestBody StoreEmployeeDTO storeEmployeeDTO) {
         try {
