@@ -2,6 +2,7 @@ package com.example.medical.store.MedicalStore;
 
 import com.example.medical.store.Prescription.PrescriptionRequest;
 import com.example.medical.store.Prescription.PrescriptionRequestService;
+import com.example.medical.store.Prescription.PrescriptionResponseDTO;
 import com.example.medical.store.StoreEmployee.StoreEmployee;
 import com.example.medical.store.StoreEmployee.StoreEmployeeDTO;
 import com.example.medical.store.StoreEmployee.StoreEmployeeService;
@@ -50,10 +51,10 @@ public class MedicalStoreController {
         }
     }
 
-    @GetMapping(path = "/allPrescriptions/{storeId}")
-    public ResponseEntity<List<PrescriptionRequest>> allRequests(@PathVariable int storeId){
-        return medicalStoreService.allPrescriptions(storeId);
-    }
+//    @GetMapping(path = "/allPrescriptions/{storeId}")
+//    public ResponseEntity<List<PrescriptionRequest>> allRequests(@PathVariable int storeId){
+//        return medicalStoreService.allPrescriptions(storeId);
+//    }
 
     @PostMapping("/addEmployee")
     public ResponseEntity<?> addEmployee(@RequestBody StoreEmployeeDTO storeEmployeeDTO) {
@@ -84,12 +85,16 @@ public class MedicalStoreController {
             return new ResponseEntity<>("Employee not Found", HttpStatus.NOT_FOUND);
         }
     }
-
-    @GetMapping("/allPrescriptions")
-    public ResponseEntity<List<PrescriptionRequest>> allPrescriptionRequests() {
-        List<PrescriptionRequest> prescriptions = prescriptionRequestService.getAllPrescriptions();
-        return new ResponseEntity<>(prescriptions, HttpStatus.OK);
+    @GetMapping("/allPrescriptions/{storeId}")
+    public ResponseEntity<List<PrescriptionResponseDTO>> allPrescriptionRequests(@PathVariable int storeId) {
+        List<PrescriptionResponseDTO> prescriptions = prescriptionRequestService.getAllPrescriptionsForStore(storeId);
+        if(prescriptions.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }else {
+            return  ResponseEntity.ok(prescriptions);
+        }
     }
+
 
     @GetMapping("/allEmployees")
     public ResponseEntity<List<StoreEmployeeDTO>> allEmployees() {

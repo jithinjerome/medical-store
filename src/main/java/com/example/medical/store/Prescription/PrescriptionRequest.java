@@ -5,8 +5,9 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
+@Data
 @Entity
-@Table(name = "Prescription-Request")
+@Table(name = "Prescription_Request")
 public class PrescriptionRequest {
 
     @Id

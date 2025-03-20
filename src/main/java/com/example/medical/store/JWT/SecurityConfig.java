@@ -13,6 +13,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import java.util.List;
 
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
@@ -45,6 +50,7 @@ public class SecurityConfig {
                                 "/api/auth/admin/login",
                                 "/api/auth/medical-store/register",
                                 "/api/auth/medical-store/login",
+                                "/api/auth/medical-store/allPrescriptions/{storeId}",
                                 "/api/auth/medical-store/allEmployees"
                         ).permitAll()
 
@@ -66,7 +72,7 @@ public class SecurityConfig {
 
                         // Medical Store-specific endpoints
                         .requestMatchers(
-                                "/api/auth/medical-store/allPrescriptions",
+                                "/api/auth/medical-store/allPrescriptions/{storeId}",
                                 "/api/auth/medical-store/allEmployees"
                         ).hasRole("MEDICALSTORE")
 
@@ -97,6 +103,19 @@ public class SecurityConfig {
 
         logger.info("Security Configuration Initialized Successfully.");
         return http.build();
+    }
+
+    // Add a Bean to handle CORS globally
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOrigins(List.of("http://localhost:5173")); // Change to your frontend URL
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 
     @Bean

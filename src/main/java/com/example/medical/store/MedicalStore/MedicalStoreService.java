@@ -71,15 +71,15 @@ public class MedicalStoreService {
         return "Login successful!";
     }
 
-    public ResponseEntity<List<PrescriptionRequest>> allPrescriptions(int storeId) {
-        Optional<MedicalStoreModel> medicalStoreModelOptional = medicalStoreRepo.findById(storeId);
-        if(medicalStoreModelOptional.isPresent()){
-            List<PrescriptionRequest> prescriptionRequestList = prescriptionRequestRepository.findByStoreId(storeId);
-            return new ResponseEntity<>(prescriptionRequestList,HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-    }
+//    public ResponseEntity<List<PrescriptionRequest>> allPrescriptions(int storeId) {
+//        Optional<MedicalStoreModel> medicalStoreModelOptional = medicalStoreRepo.findById(storeId);
+//        if(medicalStoreModelOptional.isPresent()){
+//            List<PrescriptionRequest> prescriptionRequestList = prescriptionRequestRepository.findByStoreId(storeId);
+//            return new ResponseEntity<>(prescriptionRequestList,HttpStatus.OK);
+//        }
+//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//
+//    }
 
     public MedicalStoreDTO convertToDTO(MedicalStoreModel model) {
         MedicalStoreDTO dto = new MedicalStoreDTO();

@@ -8,7 +8,6 @@ import java.time.LocalDate;
 
 
 @Entity
-
 @Table(name = "Prescription")
 public class Prescription {
 
