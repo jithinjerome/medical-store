@@ -42,13 +42,9 @@ public class MedicalStoreController {
 
     @PostMapping("/login")
     public ResponseEntity<?> medicalStoreLogin(@RequestBody MedicalStoreDTO medicalStoreDTO) {
-        try {
-            String loginResponse = medicalStoreService.medicalStoreLogin(medicalStoreDTO.getEmail(), medicalStoreDTO.getPassword());
-            return new ResponseEntity<>(loginResponse, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        }
+        return medicalStoreService.medicalStoreLogin(medicalStoreDTO.getEmail(), medicalStoreDTO.getPassword());
     }
+
 
     @GetMapping(path = "/allPrescriptions/{storeId}")
     public ResponseEntity<List<PrescriptionRequest>> allRequests(@PathVariable int storeId){

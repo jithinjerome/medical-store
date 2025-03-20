@@ -2,6 +2,7 @@ package com.example.medical.store.MedicalStore;
 
 import com.example.medical.store.AWS.FileUploadService;
 import com.example.medical.store.Exceptions.MedicalStoreException;
+import com.example.medical.store.JWT.AuthResponse;
 import com.example.medical.store.JWT.JWTUtil;
 import com.example.medical.store.Prescription.PrescriptionRequest;
 import com.example.medical.store.Prescription.PrescriptionRequestRepository;
@@ -62,13 +63,20 @@ public class MedicalStoreService {
        return convertToDTO(savedMedicalStore);
     }
 
-    public String medicalStoreLogin(String email, String password) {
-        MedicalStoreModel medicalStore = medicalStoreRepo.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid email.Please try again"));
-        if (!passwordEncoder.matches(password, medicalStore.getPassword())) {
-            throw new IllegalArgumentException("Invalid password.Please try again");
+    public ResponseEntity<?> medicalStoreLogin(String email, String password) {
+        Optional<MedicalStoreModel> medicalStoreModelOptional = medicalStoreRepo.findByEmail(email);
+
+        if(medicalStoreModelOptional.isPresent()){
+            MedicalStoreModel medicalStore = medicalStoreModelOptional.get();
+            if(passwordEncoder.matches(password,medicalStore.getPassword())){
+                String accessToken = jwtUtil.generateToken(medicalStore.getStoreId(),medicalStore.getEmail(), medicalStore.getRole().name());
+                String refreshToken = jwtUtil.generateRefreshToken(medicalStore.getEmail());
+                return ResponseEntity.ok(new AuthResponse(accessToken,refreshToken));
+            }else{
+                return ResponseEntity.badRequest().body("Invalid credentials: Password mismatch");
+            }
         }
-        return "Login successful!";
+        return ResponseEntity.badRequest().body("Invalid credentials: User not found");
     }
 
     public ResponseEntity<List<PrescriptionRequest>> allPrescriptions(int storeId) {
