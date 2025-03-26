@@ -1,6 +1,5 @@
 package com.example.medical.store.MedicalStore;
 
-import com.example.medical.store.Prescription.PrescriptionRequest;
 import com.example.medical.store.Prescription.PrescriptionRequestService;
 import com.example.medical.store.Prescription.PrescriptionResponseDTO;
 import com.example.medical.store.StoreEmployee.StoreEmployee;
@@ -85,7 +84,7 @@ public class MedicalStoreController {
             return new ResponseEntity<>("Employee not Found", HttpStatus.NOT_FOUND);
         }
     }
-    @GetMapping("/allPrescriptions/{storeId}")
+    @GetMapping("{storeId}/allPrescriptions")
     public ResponseEntity<List<PrescriptionResponseDTO>> allPrescriptionRequests(@PathVariable int storeId) {
         List<PrescriptionResponseDTO> prescriptions = prescriptionRequestService.getAllPrescriptionsForStore(storeId);
         if(prescriptions.isEmpty()){

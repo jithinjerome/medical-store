@@ -50,7 +50,7 @@ public class SecurityConfig {
                                 "/api/auth/admin/login",
                                 "/api/auth/medical-store/register",
                                 "/api/auth/medical-store/login",
-                                "/api/auth/medical-store/allPrescriptions/{storeId}",
+                                "/api/auth/medical-store/{storeId}/allPrescriptions",
                                 "/api/auth/medical-store/allEmployees"
                         ).permitAll()
 
@@ -72,7 +72,7 @@ public class SecurityConfig {
 
                         // Medical Store-specific endpoints
                         .requestMatchers(
-                                "/api/auth/medical-store/allPrescriptions/{storeId}",
+                                "/api/auth/medical-store/{storeId}/allPrescriptions",
                                 "/api/auth/medical-store/allEmployees"
                         ).hasRole("MEDICALSTORE")
 

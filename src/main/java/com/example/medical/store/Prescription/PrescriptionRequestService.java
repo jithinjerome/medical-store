@@ -58,6 +58,7 @@ public class PrescriptionRequestService {
         }
 
         List<PrescriptionRequest> prescriptionRequests = prescriptionRequestRepository.findByStoreId(storeId);
+        System.out.println("✅ Found " + prescriptionRequests.size() + " prescription requests for store ID " + storeId);
         List<PrescriptionResponseDTO> responseDTOs = new ArrayList<>();
 
         for (PrescriptionRequest request : prescriptionRequests) {
@@ -65,6 +66,7 @@ public class PrescriptionRequestService {
 
             if (prescriptionOpt.isPresent()) {
                 Prescription prescription = prescriptionOpt.get();
+                System.out.println("📄 Prescription ID " + prescription.getId() + " found for store " + storeId);
 
                 PrescriptionResponseDTO dto = new PrescriptionResponseDTO();
                 dto.setPrescriptionId(prescription.getId());
@@ -73,11 +75,15 @@ public class PrescriptionRequestService {
                 dto.setUrgency(prescription.getUrgency());
                 dto.setDeliveryType(prescription.getDeliveryType());
                 dto.setStatus(prescription.getStatus());
+                dto.setImageUrl(prescription.getImageURL());
 
                 responseDTOs.add(dto);
             }
+            else {
+                System.out.println("❌ Prescription Not Found for ID: " + request.getPrescriptionId());
+            }
         }
-
+        System.out.println("✅ Final responseDTOs size: " + responseDTOs.size());
         return responseDTOs;
     }
 
