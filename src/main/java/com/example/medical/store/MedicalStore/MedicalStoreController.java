@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/api/auth/medical-store")
@@ -43,17 +44,14 @@ public class MedicalStoreController {
     @PostMapping("/login")
     public ResponseEntity<?> medicalStoreLogin(@RequestBody MedicalStoreDTO medicalStoreDTO) {
         try {
-            String loginResponse = medicalStoreService.medicalStoreLogin(medicalStoreDTO.getEmail(), medicalStoreDTO.getPassword());
-            return new ResponseEntity<>(loginResponse, HttpStatus.OK);
+            String jwtToken = medicalStoreService.medicalStoreLogin(medicalStoreDTO.getEmail(), medicalStoreDTO.getPassword());
+            return ResponseEntity.ok().body(Map.of("token", jwtToken));
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", e.getMessage()));
         }
     }
 
-//    @GetMapping(path = "/allPrescriptions/{storeId}")
-//    public ResponseEntity<List<PrescriptionRequest>> allRequests(@PathVariable int storeId){
-//        return medicalStoreService.allPrescriptions(storeId);
-//    }
+
 
     @PostMapping("/addEmployee")
     public ResponseEntity<?> addEmployee(@RequestBody StoreEmployeeDTO storeEmployeeDTO) {

@@ -51,7 +51,10 @@ public class SecurityConfig {
                                 "/api/auth/medical-store/register",
                                 "/api/auth/medical-store/login",
                                 "/api/auth/medical-store/{storeId}/allPrescriptions",
-                                "/api/auth/medical-store/allEmployees"
+                                "/api/auth/medical-store/allEmployees",
+                                "/api/auth/medical-store/addEmployee",
+                                "/api/auth/medical-store/removeEmployee/{id}",
+                                "/api/auth/medical-store/updateEmployee/{id}"
                         ).permitAll()
 
                         // Admin-only endpoints

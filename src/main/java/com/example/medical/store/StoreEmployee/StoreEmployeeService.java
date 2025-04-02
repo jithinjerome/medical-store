@@ -33,7 +33,6 @@ public class StoreEmployeeService {
         model.setEmployeeName(storeEmployeeDTO.getEmployeeName());
         model.setEmployeeContactNo(storeEmployeeDTO.getEmployeeContactNo());
         model.setEmployeeAddress(storeEmployeeDTO.getEmployeeAddress());
-        model.setRole(storeEmployeeDTO.getRole());
         return storeEmployeeRepository.save(model);
     }
 
@@ -59,10 +58,6 @@ public class StoreEmployeeService {
         if (storeEmployeeDTO.getEmployeeContactNo() != null) {
             existingEmployee.setEmployeeContactNo(storeEmployeeDTO.getEmployeeContactNo());
         }
-        if (storeEmployeeDTO.getRole() != null) {
-            existingEmployee.setRole(storeEmployeeDTO.getRole());
-        }
-
         // Save the updated employee to the database
         StoreEmployee updatedEmployee = storeEmployeeRepository.save(existingEmployee);
 
