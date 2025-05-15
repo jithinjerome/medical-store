@@ -93,4 +93,9 @@ public class MedicalStoreController {
         return new ResponseEntity<>(storeEmployees, HttpStatus.OK);
     }
 
+    @GetMapping(path = "/verifiedStores")
+    public ResponseEntity<List<MedicalStoreModel>> verifiedStores(){
+        return medicalStoreService.verifiedStores();
+    }
+
 }

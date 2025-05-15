@@ -1,9 +1,12 @@
 package com.example.medical.store.Billing;
 
 
+import com.example.medical.store.Payment.PaymentStatus;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import lombok.Data;
 
@@ -21,14 +24,44 @@ public class Billing {
     private int storeId;
     private String storeName;
     private String deliveryType;
-
-    @ElementCollection
-    private List<String> medicines;
-
     private BigDecimal totalMedicinePrice;
     private BigDecimal gst;
     private BigDecimal deliveryCharges;
     private BigDecimal totalCharges;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
+    private String razorpayOrderId;
+    private String razorpayPaymentId;
+    private LocalDateTime createdAt;
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getRazorpayOrderId() {
+        return razorpayOrderId;
+    }
+
+    public void setRazorpayOrderId(String razorpayOrderId) {
+        this.razorpayOrderId = razorpayOrderId;
+    }
+
+    public String getRazorpayPaymentId() {
+        return razorpayPaymentId;
+    }
+
+    public void setRazorpayPaymentId(String razorpayPaymentId) {
+        this.razorpayPaymentId = razorpayPaymentId;
+    }
+
 
     public long getId() {
         return id;
@@ -77,14 +110,7 @@ public class Billing {
     public void setDeliveryType(String deliveryType) {
         this.deliveryType = deliveryType;
     }
-
-    public List<String> getMedicines() {
-        return medicines;
-    }
-
-    public void setMedicines(List<String> medicines) {
-        this.medicines = medicines;
-    }
+    
 
     public BigDecimal getTotalMedicinePrice() {
         return totalMedicinePrice;

@@ -158,4 +158,9 @@ public class MedicalStoreService {
             throw new MedicalStoreException("An unexpected error occurred while uploading the file. Please try again.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    public ResponseEntity<List<MedicalStoreModel>> verifiedStores() {
+        List<MedicalStoreModel> stores = medicalStoreRepo.findByVerificationStatus(VerificationStatus.VERIFIED);
+        return new ResponseEntity<>(stores,HttpStatus.OK);
+    }
 }

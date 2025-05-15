@@ -45,7 +45,11 @@ public class SecurityConfig {
                                 "/api/auth/admin/login",
                                 "/api/auth/medical-store/register",
                                 "/api/auth/medical-store/login",
-                                "/api/auth/medical-store/allEmployees"
+                                "/api/auth/medical-store/allEmployees",
+                                "/api/bill/generate",
+                                "/api/request/allRequests/{userId}",
+                                "/api/payment/key",
+                                "/api/payment/verify"
                         ).permitAll()
 
                         // Admin-only endpoints
@@ -67,7 +71,9 @@ public class SecurityConfig {
                         // Medical Store-specific endpoints
                         .requestMatchers(
                                 "/api/auth/medical-store/allPrescriptions",
-                                "/api/auth/medical-store/allEmployees"
+                                "/api/auth/medical-store/allEmployees",
+                                "/api/auth/medical-store/allPrescriptions/{storeId}"
+                             //   "/api/bill/generate"
                         ).hasRole("MEDICALSTORE")
 
                         // User-specific endpoints
@@ -76,7 +82,9 @@ public class SecurityConfig {
                                 "/api/user/{id}/updateDetails",
                                 "/api/request/send",
                                 "/api/bill/{userId}",
-                                "/api/user/user-location"
+                                "/api/user/user-location",
+                                "/api/prescription/upload/{userId}",
+                                "/api/prescription/{id}"
                         ).hasRole("USER")
 
                         // Delivery Person-specific endpoints
@@ -87,8 +95,9 @@ public class SecurityConfig {
                         ).hasRole("DELIVERYPERSON")
 
                         // Common endpoints for both Users and Admins
-                        .requestMatchers("/api/auth/medicalstore/verifiedStores")
+                        .requestMatchers("/api/auth/medical-store/verifiedStores")
                         .hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/error").permitAll()
 
                         // Any other request requires authentication
                         .anyRequest().authenticated()

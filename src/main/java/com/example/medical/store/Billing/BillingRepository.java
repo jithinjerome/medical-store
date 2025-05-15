@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface BillingRepository extends JpaRepository<Billing, Long> {
     List findByUserId(long userId);
+
+    Billing findByRazorpayOrderId(String razorpayOrderId);
 }

@@ -12,6 +12,7 @@ public class PrescriptionRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private long userId;
     private long prescriptionId;
     private int storeId;
     private LocalDate requestDate;
@@ -46,5 +47,12 @@ public class PrescriptionRequest {
 
     public void setRequestDate(LocalDate requestDate) {
         this.requestDate = requestDate;
+    }
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 }

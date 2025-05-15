@@ -3,18 +3,23 @@ package com.example.medical.store.Billing;
 
 import com.example.medical.store.MedicalStore.MedicalStoreModel;
 import com.example.medical.store.MedicalStore.MedicalStoreRepo;
+import com.example.medical.store.Payment.PaymentService;
+import com.example.medical.store.Payment.PaymentStatus;
 import com.example.medical.store.Prescription.Prescription;
 import com.example.medical.store.Prescription.PrescriptionRepository;
 import com.example.medical.store.Prescription.PrescriptionRequest;
 import com.example.medical.store.Prescription.PrescriptionRequestRepository;
 import com.example.medical.store.User.User;
 import com.example.medical.store.User.UserRepository;
+import com.razorpay.RazorpayException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import com.razorpay.Order;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,12 +44,18 @@ public class BillingService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PaymentService paymentService;
+
+    @Autowired
+    private BillingMedicineRepository billingMedicineRepository;
+
 
     private static final BigDecimal GST = new BigDecimal("0.18");
     private static final BigDecimal DELIVERY_CHARGE = new BigDecimal("50");
-    int SCALE =2;
+    private static final int SCALE =2;
 
-    public Billing generateBill(long prescriptionId,long storeId, List<Map<String, BigDecimal>> medicines) {
+    public Billing generateBill(long prescriptionId,long storeId, List<MedicineItemDTO> medicines) throws RazorpayException {
 
         Optional<Prescription> prescriptionOptional = prescriptionRepository.findById(prescriptionId);
 
@@ -69,21 +80,18 @@ public class BillingService {
                 .orElseThrow(() -> new RuntimeException("Store not found"));
 
         BigDecimal totalMedicinePrice = BigDecimal.ZERO;
-        List<String> medicineDetails = new ArrayList<>();
-
-        //Calculating total medicine price and collect medicine details
-        for(Map<String, BigDecimal> medicine : medicines){
-            for(Map.Entry<String, BigDecimal> entry : medicine.entrySet()){
-                totalMedicinePrice = totalMedicinePrice.add(entry.getValue());
-                medicineDetails.add(entry.getKey() + ":" + entry.getValue());
-            }
+        for(MedicineItemDTO item: medicines){
+            totalMedicinePrice = totalMedicinePrice.add(item.getPrice());
         }
 
         totalMedicinePrice = totalMedicinePrice.setScale(SCALE, RoundingMode.HALF_UP);
 
         BigDecimal gst = totalMedicinePrice.multiply(GST).setScale(SCALE, RoundingMode.HALF_UP);
-        BigDecimal deliveryCharge = "Home Delivery".equalsIgnoreCase(prescription.getDeliveryType()) ? DELIVERY_CHARGE.setScale(SCALE, RoundingMode.HALF_UP) : BigDecimal.ZERO.setScale(SCALE, RoundingMode.HALF_UP);
+        BigDecimal deliveryCharge = "Home".equalsIgnoreCase(prescription.getDeliveryType()) ? DELIVERY_CHARGE.setScale(SCALE, RoundingMode.HALF_UP) : BigDecimal.ZERO.setScale(SCALE, RoundingMode.HALF_UP);
         BigDecimal totalCharges = totalMedicinePrice.add(gst).add(deliveryCharge).setScale(SCALE, RoundingMode.HALF_UP);
+
+
+        Order razorpayOrder = paymentService.createOrder(totalCharges,"receipt_"+prescriptionId);
 
         //Save billing record
         Billing billing = new Billing();
@@ -92,13 +100,25 @@ public class BillingService {
         billing.setStoreId((int) storeId);
         billing.setStoreName(storeName);
         billing.setDeliveryType(prescription.getDeliveryType());
-        billing.setMedicines(medicineDetails);
+        //billing.setMedicines(medicineDetails);
         billing.setTotalMedicinePrice(totalMedicinePrice);
         billing.setGst(gst);
+        billing.setCreatedAt(LocalDateTime.now());
         billing.setDeliveryCharges(deliveryCharge);
         billing.setTotalCharges(totalCharges);
+        billing.setRazorpayOrderId(razorpayOrder.get("id"));
+        billing.setPaymentStatus(PaymentStatus.PENDING);
 
-        return billingRepository.save(billing);
+        billingRepository.save(billing);
+
+        for(MedicineItemDTO item: medicines){
+            BillingMedicine bm = new BillingMedicine();
+            bm.setBillingId(billing.getId());
+            bm.setName(item.getName());
+            bm.setPrice(item.getPrice());
+            billingMedicineRepository.save(bm);
+        }
+        return billing;
 
     }
 

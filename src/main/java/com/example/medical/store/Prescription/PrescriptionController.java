@@ -50,11 +50,10 @@ public class PrescriptionController {
         return prescriptionService.prescriptionById(userId);
     }
 
-    @PutMapping(path = "/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(path = "/{id}")
     public ResponseEntity<?> updatePrescription(@PathVariable long id,
-                                                @RequestPart("Prescription") Prescription prescription,
-                                                @RequestPart(value = "image", required = false) MultipartFile image){
-        return prescriptionService.updatePrescription(id,prescription,image);
+                                                @RequestBody Prescription prescription){
+        return prescriptionService.updatePrescription(id,prescription);
     }
 
     @DeleteMapping(path = "/{id}")

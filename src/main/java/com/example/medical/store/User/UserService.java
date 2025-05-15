@@ -44,7 +44,7 @@ public class UserService {
         Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
 
         if(userOptional.isPresent()){
-            throw new IllegalArgumentException("User already exist with same email ID");
+            return new ResponseEntity<>("User already exist with same email ID",HttpStatus.BAD_REQUEST);    
         }
 
         if (user.getRole() == null) {

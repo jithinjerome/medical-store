@@ -1,5 +1,7 @@
 package com.example.medical.store.Prescription;
 
+import com.example.medical.store.User.User;
+import com.example.medical.store.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +21,9 @@ public class PrescriptionRequestService {
     @Autowired
     private PrescriptionRepository prescriptionRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
 
     public ResponseEntity<?> prescriptionRequest(long prescriptionId, int storeId) {
         Optional<Prescription> prescriptionOptional = prescriptionRepository.findById(prescriptionId);
@@ -27,6 +32,7 @@ public class PrescriptionRequestService {
             PrescriptionRequest prescriptionRequest = new PrescriptionRequest();
             prescriptionRequest.setPrescriptionId(prescriptionId);
             prescriptionRequest.setStoreId(storeId);
+            prescriptionRequest.setUserId(prescription.getUserId());
             prescriptionRequest.setRequestDate(LocalDate.now());
 
             PrescriptionRequest saved = prescriptionRequestRepository.save(prescriptionRequest);
@@ -48,5 +54,17 @@ public class PrescriptionRequestService {
 
     public List<PrescriptionRequest> getAllPrescriptions() {
         return prescriptionRequestRepository.findAll();
+    }
+
+    public ResponseEntity<List<PrescriptionRequest>> getAllRequests(long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if(userOptional.isEmpty()){
+           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        List<PrescriptionRequest> requests = prescriptionRequestRepository.findByUserId(userId);
+        if (requests.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(requests,HttpStatus.OK);
     }
 }

@@ -73,7 +73,7 @@ public class PrescriptionService {
     }
 
     @Transactional //Dynamic Update
-    public ResponseEntity<?> updatePrescription(long id, Prescription prescription,MultipartFile image) {
+    public ResponseEntity<?> updatePrescription(long id, Prescription prescription) {
         Optional<Prescription> prescriptionOptional = prescriptionRepository.findById(id);
         if(prescriptionOptional.isPresent()){
 
@@ -84,7 +84,6 @@ public class PrescriptionService {
 //                return new ResponseEntity<>("Prescription details are required", HttpStatus.BAD_REQUEST);
 //            }
 
-            String oldImageURL = updatedPrescription.getImageURL();
             String oldDeliveryType = updatedPrescription.getDeliveryType();
             String oldUrgency = updatedPrescription.getUrgency();
             String oldStatus = updatedPrescription.getStatus();
@@ -99,16 +98,6 @@ public class PrescriptionService {
             if(prescription.getDeliveryType() != null && !prescription.getDeliveryType().equals(updatedPrescription.getDeliveryType())){
                 updatedPrescription.setDeliveryType(prescription.getDeliveryType());
             }
-            if( image != null && !image.isEmpty()){
-                try{
-                    String keyName = "prescriptions/" + updatedPrescription.getUserId() + "_" + image.getOriginalFilename();
-                    String imageURL = fileUploadService.uploadFile(BUCKET_NAME,keyName, image.getBytes());
-                    updatedPrescription.setImageURL(imageURL);
-
-                }catch (Exception e){
-                    return new ResponseEntity<>("Error updating image: " + e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
-                }
-            }
 
             Prescription saved = prescriptionRepository.save(updatedPrescription);
 
@@ -120,7 +109,6 @@ public class PrescriptionService {
             response.setUrgency(updatedPrescription.getUrgency() != null ? updatedPrescription.getUrgency() : oldUrgency);
             response.setStatus(updatedPrescription.getStatus() != null ? updatedPrescription.getStatus() : oldStatus);
             response.setDeliveryType(updatedPrescription.getDeliveryType() != null ? updatedPrescription.getDeliveryType() : oldDeliveryType);
-            response.setImageURL(updatedPrescription.getImageURL() != null ? updatedPrescription.getImageURL() : oldImageURL);
 
 
             return new ResponseEntity<>(response,HttpStatus.OK);
