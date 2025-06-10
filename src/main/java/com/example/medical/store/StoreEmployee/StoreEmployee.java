@@ -1,5 +1,6 @@
 package com.example.medical.store.StoreEmployee;
 
+import com.example.medical.store.MedicalStore.MedicalStoreModel;
 import com.example.medical.store.User.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,15 +14,14 @@ public class StoreEmployee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long employeeId;
-
     private String employeeName;
-
     private String employeeAddress;
-
     private String employeeContactNo;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @ManyToOne
+    @JoinColumn(name = "medical_store_id", nullable = false)
+    private MedicalStoreModel medicalStore; // Linking employees to a store
+
 
     public Long getEmployeeId() {
         return employeeId;
@@ -55,11 +55,4 @@ public class StoreEmployee {
         this.employeeContactNo = employeeContactNo;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
 }

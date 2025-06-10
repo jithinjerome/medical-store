@@ -11,7 +11,7 @@ public class StoreEmployeeDTO {
     private String employeeName;
     private String employeeAddress;
     private String employeeContactNo;
-    private Role role;
+
 
     public Long getEmployeeId() {
         return employeeId;
@@ -45,12 +45,5 @@ public class StoreEmployeeDTO {
         this.employeeContactNo = employeeContactNo;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
 
 }

@@ -2,6 +2,7 @@ package com.example.medical.store.MedicalStore;
 
 import com.example.medical.store.Prescription.PrescriptionRequest;
 import com.example.medical.store.Prescription.PrescriptionRequestService;
+import com.example.medical.store.Prescription.PrescriptionResponseDTO;
 import com.example.medical.store.StoreEmployee.StoreEmployee;
 import com.example.medical.store.StoreEmployee.StoreEmployeeDTO;
 import com.example.medical.store.StoreEmployee.StoreEmployeeService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/api/auth/medical-store")
@@ -46,10 +48,7 @@ public class MedicalStoreController {
     }
 
 
-    @GetMapping(path = "/allPrescriptions/{storeId}")
-    public ResponseEntity<List<PrescriptionRequest>> allRequests(@PathVariable int storeId){
-        return medicalStoreService.allPrescriptions(storeId);
-    }
+
 
     @PostMapping("/addEmployee")
     public ResponseEntity<?> addEmployee(@RequestBody StoreEmployeeDTO storeEmployeeDTO) {
@@ -61,15 +60,15 @@ public class MedicalStoreController {
         }
     }
 
-//    @PutMapping("/updateEmployee/{id}")
-//    public ResponseEntity<?> updateEmployee(@PathVariable Long id, @RequestBody StoreEmployeeDTO storeEmployeeDTO) {
-//        try {
-//            StoreEmployeeDTO updatedEmployee = storeEmployeeService.updateEmployee(id, storeEmployeeDTO);
-//            return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-//        }
-//    }
+    @PutMapping("/updateEmployee/{id}")
+    public ResponseEntity<?> updateEmployee(@PathVariable Long id, @RequestBody StoreEmployeeDTO storeEmployeeDTO) {
+        try {
+            StoreEmployeeDTO updatedEmployee = storeEmployeeService.updateEmployee(id, storeEmployeeDTO);
+            return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @DeleteMapping("/removeEmployee/{id}")
     public ResponseEntity<String> removeEmployee(@PathVariable Long id) {
@@ -78,6 +77,15 @@ public class MedicalStoreController {
             return new ResponseEntity<>("Employee Deleted", HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>("Employee not Found", HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping("{storeId}/allPrescriptions")
+    public ResponseEntity<List<PrescriptionResponseDTO>> allPrescriptionRequests(@PathVariable int storeId) {
+        List<PrescriptionResponseDTO> prescriptions = prescriptionRequestService.getAllPrescriptionsForStore(storeId);
+        if(prescriptions.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }else {
+            return  ResponseEntity.ok(prescriptions);
         }
     }
 

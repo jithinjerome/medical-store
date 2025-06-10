@@ -1,62 +1,55 @@
 package com.example.medical.store.Prescription;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
-
+@Getter
+@Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PrescriptionResponseDTO {
 
+    @JsonProperty("urgency")
     private String urgency;
+    @JsonProperty("deliveryType")
     private String deliveryType;
+    @JsonProperty("status")
     private String status;
+    @JsonProperty("prescriptionId")
     private long prescriptionId;
+    @JsonProperty("storeId")
     private long storeId;
+    @JsonProperty("requestDate")
     private LocalDate requestDate;
 
-    public String getUrgency() {
-        return urgency;
+    @JsonProperty("imageUrl")
+    private String imageUrl;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public void setUrgency(String urgency) {
         this.urgency = urgency;
     }
 
-    public String getDeliveryType() {
-        return deliveryType;
-    }
-
     public void setDeliveryType(String deliveryType) {
         this.deliveryType = deliveryType;
-    }
-
-    public String getStatus() {
-        return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
     }
 
-    public long getPrescriptionId() {
-        return prescriptionId;
-    }
-
     public void setPrescriptionId(long prescriptionId) {
         this.prescriptionId = prescriptionId;
     }
 
-    public long getStoreId() {
-        return storeId;
-    }
-
     public void setStoreId(long storeId) {
         this.storeId = storeId;
-    }
-
-    public LocalDate getRequestDate() {
-        return requestDate;
     }
 
     public void setRequestDate(LocalDate requestDate) {

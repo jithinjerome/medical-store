@@ -4,6 +4,6 @@ public enum Role {
     ADMIN,
     USER,
     DELIVERYPERSON,
-    MEDICALSTORE,
-    STOREEMPLOYEE
+    MEDICALSTORE
+
 }

@@ -50,7 +50,13 @@ public class MedicalStoreService {
         MedicalStoreModel medicalStoreModel = convertToModel(medicalStoreDTO);
 
         // Encode password
-        medicalStoreModel.setPassword(passwordEncoder.encode(medicalStoreDTO.getPassword()));
+        if (medicalStoreDTO.getPassword() != null && !medicalStoreDTO.getPassword().isEmpty()) {
+            medicalStoreModel.setPassword(passwordEncoder.encode(medicalStoreDTO.getPassword()));
+        } else {
+            throw new MedicalStoreException("Password cannot be null or empty", HttpStatus.BAD_REQUEST);
+        }
+        System.out.println("Received Password: " + medicalStoreDTO.getPassword());
+
 
         // Handle file upload
         if (licenseImage != null && !licenseImage.isEmpty()) {
@@ -76,18 +82,24 @@ public class MedicalStoreService {
                 return ResponseEntity.badRequest().body("Invalid credentials: Password mismatch");
             }
         }
+        String jwtToken = jwtUtil.generateToken(medicalStore.getStoreId(), email, medicalStore.getRole().toString());
+        System.out.println("Generated JWT Token: " + jwtToken);
         return ResponseEntity.badRequest().body("Invalid credentials: User not found");
     }
 
-    public ResponseEntity<List<PrescriptionRequest>> allPrescriptions(int storeId) {
-        Optional<MedicalStoreModel> medicalStoreModelOptional = medicalStoreRepo.findById(storeId);
-        if(medicalStoreModelOptional.isPresent()){
-            List<PrescriptionRequest> prescriptionRequestList = prescriptionRequestRepository.findByStoreId(storeId);
-            return new ResponseEntity<>(prescriptionRequestList,HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return jwtToken;
 
     }
+
+//    public ResponseEntity<List<PrescriptionRequest>> allPrescriptions(int storeId) {
+//        Optional<MedicalStoreModel> medicalStoreModelOptional = medicalStoreRepo.findById(storeId);
+//        if(medicalStoreModelOptional.isPresent()){
+//            List<PrescriptionRequest> prescriptionRequestList = prescriptionRequestRepository.findByStoreId(storeId);
+//            return new ResponseEntity<>(prescriptionRequestList,HttpStatus.OK);
+//        }
+//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//
+//    }
 
     public MedicalStoreDTO convertToDTO(MedicalStoreModel model) {
         MedicalStoreDTO dto = new MedicalStoreDTO();
