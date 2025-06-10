@@ -31,10 +31,9 @@ public class DeliveryPersonController {
         }
     }
     @PostMapping("/login")
-    public ResponseEntity<String> deliveryPersonLogin(@RequestBody DeliveryPersonModel loginRequest) {
+    public ResponseEntity<?> deliveryPersonLogin(@RequestBody DeliveryPersonModel loginRequest) {
         try {
-            String loginResponse = deliveryPersonService.deliveryPersonLogin(loginRequest.getEmail(), loginRequest.getPassword());
-            return new ResponseEntity<>(loginResponse, HttpStatus.OK);
+            return deliveryPersonService.deliveryPersonLogin(loginRequest.getEmail(), loginRequest.getPassword());
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }

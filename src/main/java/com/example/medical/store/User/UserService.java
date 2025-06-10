@@ -1,5 +1,6 @@
 package com.example.medical.store.User;
 
+import com.example.medical.store.AWS.FileUploadService;
 import com.example.medical.store.JWT.AuthResponse;
 import com.example.medical.store.JWT.JWTUtil;
 import com.example.medical.store.MedicalStore.MedicalStoreModel;
@@ -13,6 +14,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
@@ -37,6 +39,11 @@ public class UserService {
 
     @Autowired
     private MedicalStoreRepo medicalStoreRepo;
+
+    @Autowired
+    private FileUploadService fileUploadService;
+
+    private static final String BUCKET_NAME = "medicalstore";
 
 
     public ResponseEntity<?> registerUser(User user) {
@@ -193,5 +200,29 @@ public class UserService {
             return new ResponseEntity<>(updatedUser,HttpStatus.OK);
         }
         throw new RuntimeException("User not found with ID "+id);
+    }
+
+    public ResponseEntity<?> uploadImage(long id, MultipartFile image) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if(userOptional.isPresent()){
+            User user = userOptional.get();
+
+            try{
+                String keyName = "user-profile/" + id + "_" + image.getOriginalFilename();
+                String imageURL = fileUploadService.uploadFile(BUCKET_NAME, keyName, image.getBytes());
+
+                user.setImageURL(imageURL);
+                userRepository.save(user);
+
+                return new ResponseEntity<>("Image uploaded Successfully",HttpStatus.OK);
+            }
+
+            catch (Exception e){
+                return new ResponseEntity<>("Image upload failed" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        else {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
     }
 }

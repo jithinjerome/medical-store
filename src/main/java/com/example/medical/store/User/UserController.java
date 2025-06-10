@@ -2,8 +2,10 @@ package com.example.medical.store.User;
 
 import com.example.medical.store.MedicalStore.MedicalStoreModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -27,6 +29,11 @@ public class UserController {
     @PutMapping(path = "/{id}/updateDetails")
     public ResponseEntity<?> updateDetails(@PathVariable long id, @RequestBody User user){
         return userService.updateDetails(id,user);
+    }
+
+    @PutMapping(path = "/uploadImage/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadImage(@PathVariable long id, @RequestPart ("image")MultipartFile image){
+        return userService.uploadImage(id,image);
     }
 
     @GetMapping("/user-location")

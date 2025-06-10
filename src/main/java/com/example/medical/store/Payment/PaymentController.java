@@ -2,6 +2,7 @@ package com.example.medical.store.Payment;
 
 import com.example.medical.store.Billing.Billing;
 import com.example.medical.store.Billing.BillingRepository;
+import com.example.medical.store.NotificationSystem.Notification.NotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class PaymentController {
 
     @Autowired
     private PaymentService paymentService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @Autowired
     private BillingRepository billingRepository;
@@ -55,12 +59,15 @@ public class PaymentController {
 
             if (!isValid) {
                 logger.warn("Invalid payment signature for Razorpay Order ID: {}", razorpayOrderId);
+                notificationService.notifyUser(billing.getUserId(), "Your payment could not be processed. Please try again or use a different payment method.", "PAYMENT FAILED");
                 billing.setPaymentStatus(PaymentStatus.FAILED);
                 billingRepository.save(billing);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid payment signature");
             }
 
             logger.info("Payment verified for Razorpay Order ID: {}", razorpayOrderId);
+            notificationService.notifyUser(billing.getUserId(), "Your payment has been successfully processed. Thank you for your purchase!", "PAYMENT SUCCESS");
+
             billing.setPaymentStatus(PaymentStatus.PAID);
             billing.setRazorpayPaymentId(razorpayPaymentId);
             billingRepository.save(billing);

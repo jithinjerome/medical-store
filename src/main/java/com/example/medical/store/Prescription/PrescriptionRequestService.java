@@ -1,5 +1,6 @@
 package com.example.medical.store.Prescription;
 
+import com.example.medical.store.NotificationSystem.Notification.NotificationService;
 import com.example.medical.store.User.User;
 import com.example.medical.store.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class PrescriptionRequestService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
 
     public ResponseEntity<?> prescriptionRequest(long prescriptionId, int storeId) {
         Optional<Prescription> prescriptionOptional = prescriptionRepository.findById(prescriptionId);
@@ -36,6 +40,9 @@ public class PrescriptionRequestService {
             prescriptionRequest.setRequestDate(LocalDate.now());
 
             PrescriptionRequest saved = prescriptionRequestRepository.save(prescriptionRequest);
+
+            notificationService.notifyUser(prescription.getUserId(), "Your prescription has been submitted successfully", "PRESCRIPTION SENT");
+            notificationService.notifyStore(storeId, "You have a new prescription request", "PRESCRIPTION RECEIVED");
 
             PrescriptionResponseDTO responseDTO = new PrescriptionResponseDTO();
             responseDTO.setPrescriptionId(prescriptionId);

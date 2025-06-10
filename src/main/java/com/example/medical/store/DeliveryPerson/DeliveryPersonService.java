@@ -1,6 +1,7 @@
 package com.example.medical.store.DeliveryPerson;
 
 import com.example.medical.store.AWS.FileUploadService;
+import com.example.medical.store.JWT.AuthResponse;
 import com.example.medical.store.JWT.JWTUtil;
 import com.example.medical.store.User.Role;
 import com.example.medical.store.User.VerificationStatus;
@@ -84,14 +85,16 @@ public class DeliveryPersonService {
         return deliveryPersonRepo.save(deliveryPersonModel);
     }
 
-    public String deliveryPersonLogin(@Email(message = "Invalid email address") @NotBlank(message = "Email is required") String email,
+    public ResponseEntity<?> deliveryPersonLogin(@Email(message = "Invalid email address") @NotBlank(message = "Email is required") String email,
                                       @NotBlank(message = "Password is required") @Size(min = 8, message = "Password must be at least 8 characters long") String password) {
         Optional<DeliveryPersonModel> deliveryPersonOptional = deliveryPersonRepo.findByEmail(email);
 
         if (deliveryPersonOptional.isPresent()) {
             DeliveryPersonModel deliveryPerson = deliveryPersonOptional.get();
             if (passwordEncoder.matches(password, deliveryPerson.getPassword())) {
-                return jwtUtil.generateToken(deliveryPerson.getDeliveryPersonId(), deliveryPerson.getEmail(), deliveryPerson.getRole().name());
+                String accessToken = jwtUtil.generateToken(deliveryPerson.getDeliveryPersonId(),deliveryPerson.getEmail(), deliveryPerson.getRole().name());
+                String refreshToken = jwtUtil.generateRefreshToken(deliveryPerson.getEmail());
+                return ResponseEntity.ok(new AuthResponse(accessToken,refreshToken));
             } else {
                 throw new IllegalArgumentException("Invalid credentials: Password mismatch");
             }
@@ -121,4 +124,6 @@ public class DeliveryPersonService {
         }
         return new ResponseEntity<>(notVerified, HttpStatus.OK);
     }
+
+
 }

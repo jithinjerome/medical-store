@@ -24,6 +24,7 @@ public class User {
     private String email;
     @Column(name = "Password")
     private String password;
+    private String imageURL;
 
     @Column(name = "Phone")
     private String phone;
@@ -106,6 +107,14 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
 

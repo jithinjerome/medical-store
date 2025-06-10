@@ -3,6 +3,7 @@ package com.example.medical.store.Billing;
 
 import com.example.medical.store.MedicalStore.MedicalStoreModel;
 import com.example.medical.store.MedicalStore.MedicalStoreRepo;
+import com.example.medical.store.NotificationSystem.Notification.NotificationService;
 import com.example.medical.store.Payment.PaymentService;
 import com.example.medical.store.Payment.PaymentStatus;
 import com.example.medical.store.Prescription.Prescription;
@@ -49,6 +50,9 @@ public class BillingService {
 
     @Autowired
     private BillingMedicineRepository billingMedicineRepository;
+
+    @Autowired
+    private NotificationService notificationService;
 
 
     private static final BigDecimal GST = new BigDecimal("0.18");
@@ -110,6 +114,8 @@ public class BillingService {
         billing.setPaymentStatus(PaymentStatus.PENDING);
 
         billingRepository.save(billing);
+        notificationService.notifyUser(billing.getUserId(), "Your bill has been generated successfully. You can now proceed to review and complete the payment.", "BILL GENERATED");
+
 
         for(MedicineItemDTO item: medicines){
             BillingMedicine bm = new BillingMedicine();

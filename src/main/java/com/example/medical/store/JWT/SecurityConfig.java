@@ -28,12 +28,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/ws/**", "/topic/**").disable())
                 .cors(cors -> cors.configure(http))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // Publicly accessible endpoints
                         .requestMatchers(
+                                "/api/notifications/user/{userId}/{notificationId}",
+                                "/api/notifications/user/allNotifications/{id}",
+                                "/ws/**", "/topic/**",
                                 "/api/auth/refreshToken",
                                 "/api/user/register",
                                 "/api/user/login",
@@ -84,7 +87,8 @@ public class SecurityConfig {
                                 "/api/bill/{userId}",
                                 "/api/user/user-location",
                                 "/api/prescription/upload/{userId}",
-                                "/api/prescription/{id}"
+                                "/api/prescription/{id}",
+                                "/api/user/uploadImage/{id}"
                         ).hasRole("USER")
 
                         // Delivery Person-specific endpoints
